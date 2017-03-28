@@ -1,0 +1,25 @@
+.app {
+}
+
+aside.primary-aside {
+  width: 200px;
+  position: relative;
+  display: inline-block;
+  float: left;
+}
+
+aside.primary-aside a.active {
+    font-weight: bold;
+}
+
+main {
+  flex: 1;
+}
+
+div.button{
+	margin-left: 10px;
+	display: inline-block;
+	height: 15px;
+	border: 1px solid red
+}
+
