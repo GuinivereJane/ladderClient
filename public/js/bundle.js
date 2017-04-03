@@ -66,7 +66,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(301).polyfill();
+	__webpack_require__(302).polyfill();
 	
 	// Notice that we've organized all of our routes into a separate file.
 	
@@ -22118,6 +22118,8 @@
 	  switch (action.type) {
 	
 	    case types.GET_PLAYERS_SUCCESS:
+	      console.log(action);
+	
 	      return Object.assign({}, state, { players: action.players });
 	
 	    case types.DELETE_PLAYER_SUCCESS:
@@ -22129,10 +22131,10 @@
 	      return Object.assign({}, state, { players: newPlayers });
 	
 	    case types.PLAYER_PROFILE_SUCCESS:
+	      console.log(action);
 	      return Object.assign({}, state, { playerProfile: action.playerProfile });
-	
 	  }
-	
+	  console.log(state);
 	  return state;
 	};
 	
@@ -39335,19 +39337,23 @@
 	
 	var _playerListContainer2 = _interopRequireDefault(_playerListContainer);
 	
-	var _playerProfile = __webpack_require__(294);
+	var _playerProfileContainer = __webpack_require__(294);
+	
+	var _playerProfileContainer2 = _interopRequireDefault(_playerProfileContainer);
+	
+	var _playerProfile = __webpack_require__(295);
 	
 	var _playerProfile2 = _interopRequireDefault(_playerProfile);
 	
-	var _shopListContainer = __webpack_require__(295);
+	var _shopListContainer = __webpack_require__(296);
 	
 	var _shopListContainer2 = _interopRequireDefault(_shopListContainer);
 	
-	var _shopList = __webpack_require__(296);
+	var _shopList = __webpack_require__(297);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
-	var _newPlayerContainer = __webpack_require__(299);
+	var _newPlayerContainer = __webpack_require__(300);
 	
 	var _newPlayerContainer2 = _interopRequireDefault(_newPlayerContainer);
 	
@@ -39357,10 +39363,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// Pages
-	
-	
-	// Layouts
 	exports.default = _react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
@@ -39373,7 +39375,7 @@
 	      { path: 'players' },
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _playerListContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'new', component: _newPlayerContainer2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: ':playerId', component: _playerProfile2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: ':playerId', component: _playerProfileContainer2.default })
 	    ),
 	    _react2.default.createElement(
 	      _reactRouter.Route,
@@ -39382,6 +39384,11 @@
 	    )
 	  )
 	);
+	
+	// Pages
+	
+	
+	// Layouts
 
 /***/ },
 /* 204 */
@@ -44699,6 +44706,7 @@
 		}, {
 			key: 'render',
 			value: function render() {
+	
 				return _react2.default.createElement(_playerList2.default, { players: this.props.players, deletePlayer: playerApi.deletePlayer });
 			}
 		}]);
@@ -44812,6 +44820,7 @@
 	exports.getPlayers = getPlayers;
 	exports.savePlayer = savePlayer;
 	exports.deletePlayer = deletePlayer;
+	exports.getProfile = getProfile;
 	
 	var _axios = __webpack_require__(266);
 	
@@ -44855,11 +44864,9 @@
 	 */
 	function savePlayer(data) {
 	
-	  $.post('http://localhost:8081/users', data).then(window.location = "http://localhost:3000/players");
-	  // return axios.post('/players',data,{baseURL:'http://localhost:8081',method:'POST',type:'text'})
-	  //   .then(
-	  //    // window.location = "http://localhost:3000/players"  
-	  //  );
+	  $.post('http://localhost:8081/users', data).then(function (response) {
+	    return response;
+	  });
 	}
 	
 	function deletePlayer(playerId) {
@@ -44874,44 +44881,19 @@
 	//  * three XHR requests to get all the profile info.
 	//  */
 	
-	// export function getProfile(userId) {
+	function getProfile(userId) {
+	  // Start with an empty profile object and build it up
+	  // from multiple XHR requests.
 	
-	//   // Start with an empty profile object and build it up
-	//   // from multiple XHR requests.
-	//   let profile = {};
+	  // Get the user data from our local database.
+	  return $.get('http://localhost:8081/users/' + userId).then(function (response) {
+	    var user = JSON.parse(response);
 	
-	//   // Get the user data from our local database.
-	//   return axios.get('http://localhost:3001/users/' + userId)
-	//     .then(response => {
+	    _store2.default.dispatch((0, _playerActions.playerProfileSuccess)(user));
 	
-	//       let user = response.data;
-	//       profile.name = user.name;
-	//       profile.twitter = user.twitter;
-	//       profile.worksOn = user.worksOn;
-	
-	//       // Then use the github attribute from the previous request to
-	//       // sent two XHR requests to GitHub's API. The first for their
-	//       // general user info, and the second for their repos.
-	//       return Promise.all([
-	//         axios.get('https://api.github.com/users/' + user.github),
-	//         axios.get('https://api.github.com/users/' + user.github + '/repos')
-	//       ]).then(results => {
-	
-	//         let githubProfile = results[0].data;
-	//         let githubRepos = results[1].data;
-	
-	//         profile.imageUrl = githubProfile.avatar_url;
-	//         profile.repos = githubRepos;
-	
-	//         store.dispatch(userProfileSuccess(profile));
-	
-	//         return;
-	
-	//       });
-	
-	//     });
-	
-	//}
+	    return;
+	  });
+	}
 
 /***/ },
 /* 266 */
@@ -56733,6 +56715,83 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.PlayerProfileContainer = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(159);
+	
+	var _playerProfile = __webpack_require__(295);
+	
+	var _playerProfile2 = _interopRequireDefault(_playerProfile);
+	
+	var _playerApi = __webpack_require__(265);
+	
+	var playerApi = _interopRequireWildcard(_playerApi);
+	
+	var _searchLayoutActions = __webpack_require__(293);
+	
+	var _store = __webpack_require__(197);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PlayerProfileContainer = exports.PlayerProfileContainer = function (_React$Component) {
+		_inherits(PlayerProfileContainer, _React$Component);
+	
+		function PlayerProfileContainer() {
+			_classCallCheck(this, PlayerProfileContainer);
+	
+			return _possibleConstructorReturn(this, (PlayerProfileContainer.__proto__ || Object.getPrototypeOf(PlayerProfileContainer)).apply(this, arguments));
+		}
+	
+		_createClass(PlayerProfileContainer, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				playerApi.getProfile(this.props.params.playerId);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				console.log(this.props);
+	
+				return _react2.default.createElement(_playerProfile2.default, { profile: this.props.playerProfile });
+			}
+		}]);
+	
+		return PlayerProfileContainer;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(store) {
+		return {
+			playerProfile: store.playerState.playerProfile
+		};
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(PlayerProfileContainer);
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.PlayerProfile = undefined;
@@ -56763,11 +56822,14 @@
 	  _createClass(PlayerProfile, [{
 	    key: 'render',
 	    value: function render() {
+	
 	      return _react2.default.createElement(
 	        'h1',
 	        null,
 	        'Player Profile for userId: ',
-	        this.props.params.playerId
+	        this.props.profile.firstname,
+	        ' ',
+	        this.props.profile.lastname
 	      );
 	    }
 	  }]);
@@ -56780,7 +56842,7 @@
 	exports.default = PlayerProfile;
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56798,11 +56860,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _shopList = __webpack_require__(296);
+	var _shopList = __webpack_require__(297);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
-	var _shopApi = __webpack_require__(297);
+	var _shopApi = __webpack_require__(298);
 	
 	var shopApi = _interopRequireWildcard(_shopApi);
 	
@@ -56857,7 +56919,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(ShopListContainer);
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56921,7 +56983,7 @@
 	exports.default = ShopList;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56939,7 +57001,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _shopActions = __webpack_require__(298);
+	var _shopActions = __webpack_require__(299);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -56955,7 +57017,7 @@
 	}
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56995,7 +57057,7 @@
 	}
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57013,7 +57075,7 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _playerForm = __webpack_require__(300);
+	var _playerForm = __webpack_require__(301);
 	
 	var _playerForm2 = _interopRequireDefault(_playerForm);
 	
@@ -57061,6 +57123,7 @@
 				};
 	
 				playerApi.savePlayer(data);
+				window.location = "http://localhost:3000/players";
 			}
 		}, {
 			key: 'render',
@@ -57081,7 +57144,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(NewPlayerContainer);
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -57169,7 +57232,7 @@
 	exports.default = PlayerForm;
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/* WEBPACK VAR INJECTION */(function(process, global) {/*!
@@ -57304,7 +57367,7 @@
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(302);
+	    var vertx = __webpack_require__(303);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -58329,7 +58392,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), (function() { return this; }())))
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports) {
 
 	/* (ignored) */

@@ -18,6 +18,7 @@ export class PlayerListContainer extends React.Component {
 	
 	
 	render(){
+
 		return (
 			<PlayerList players={this.props.players} deletePlayer={playerApi.deletePlayer}/>
 			);

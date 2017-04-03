@@ -8,6 +8,7 @@ export class PlayerList extends React.Component {
   // }
 
   render() {
+
     return (
       <div>
       <ul className = "player-list">

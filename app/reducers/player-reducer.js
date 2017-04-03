@@ -13,6 +13,8 @@ const playerReducer = function(state = initialState, action) {
   switch(action.type) {
 
     case types.GET_PLAYERS_SUCCESS:
+        console.log(action);
+
       return Object.assign({}, state, { players: action.players });
 
     case types.DELETE_PLAYER_SUCCESS:
@@ -22,10 +24,10 @@ const playerReducer = function(state = initialState, action) {
       return Object.assign({}, state, { players: newPlayers });
 
     case types.PLAYER_PROFILE_SUCCESS:
+    console.log(action);
       return Object.assign({}, state, { playerProfile: action.playerProfile });
-
   }
-
+console.log(state);
   return state;
 
 }

@@ -22,6 +22,8 @@ export class NewPlayerContainer extends React.Component {
     		}
     	
 		playerApi.savePlayer(data);
+		window.location = "http://localhost:3000/players"
+
 	}
 
 	render(){

@@ -7,6 +7,8 @@ import SearchLayout from './components/layouts/search-layout';
 
 // Pages
 import PlayerListContainer from './components/containers/player-list-container';
+import PlayerProfileContainer from './components/containers/player-profile-container';
+
 import PlayerProfile from './components/views/player-profile';
 import ShopListContainer from './components/containers/shop-list-container';
 import ShopList from './components/views/shop-list';
@@ -17,13 +19,11 @@ import PlayerList from './components/views/player-list';
 export default (
   <Router history={browserHistory}>
     <Route component={MainLayout}>
-
         <Route path="/" />
-
         <Route path="players">
           <IndexRoute component={PlayerListContainer} />
           <Route path="new" component = {NewPlayerContainer} />
-          <Route path=":playerId" component={PlayerProfile} />
+          <Route path=":playerId" component={PlayerProfileContainer} />
         </Route>
 
         <Route path="shops">
