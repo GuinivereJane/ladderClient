@@ -44832,7 +44832,7 @@
 	 */
 	
 	function getPlayers() {
-	  return _axios2.default.get('http://localhost:8081/players').then(function (response) {
+	  return _axios2.default.get('http://localhost:8081/users').then(function (response) {
 	    _store2.default.dispatch((0, _playerActions.getPlayersSuccess)(response.data));
 	    return response;
 	  });
@@ -44855,7 +44855,7 @@
 	 */
 	function savePlayer(data) {
 	
-	  $.post('http://localhost:8081/players', data).then(window.location = "http://localhost:3000/players");
+	  $.post('http://localhost:8081/users', data).then(window.location = "http://localhost:3000/players");
 	  // return axios.post('/players',data,{baseURL:'http://localhost:8081',method:'POST',type:'text'})
 	  //   .then(
 	  //    // window.location = "http://localhost:3000/players"  
@@ -44863,7 +44863,7 @@
 	}
 	
 	function deletePlayer(playerId) {
-	  return _axios2.default.delete('http://localhost:8081/players/' + playerId).then(function (response) {
+	  return _axios2.default.delete('http://localhost:8081/users/' + playerId).then(function (response) {
 	    _store2.default.dispatch((0, _playerActions.deletePlayerSuccess)(playerId));
 	    return response;
 	  });

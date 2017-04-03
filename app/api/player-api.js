@@ -9,7 +9,7 @@ var $ = require('jQuery');
  */
 
 export function getPlayers() {
-  return axios.get('http://localhost:8081/players')
+  return axios.get('http://localhost:8081/users')
     .then(response => {
       store.dispatch(getPlayersSuccess(response.data));
       return response;
@@ -33,7 +33,7 @@ export function getPlayers() {
  */
  export function savePlayer(data){
       
-      $.post('http://localhost:8081/players',data)
+      $.post('http://localhost:8081/users',data)
       .then(
          window.location = "http://localhost:3000/players"
       );
@@ -44,7 +44,7 @@ export function getPlayers() {
  }
 
 export function deletePlayer(playerId) {
-  return axios.delete('http://localhost:8081/players/' + playerId)
+  return axios.delete('http://localhost:8081/users/' + playerId)
     .then(response => {
       store.dispatch(deletePlayerSuccess(playerId));
       return response;
