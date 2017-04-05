@@ -22031,7 +22031,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 	
 	var _redux = __webpack_require__(170);
@@ -22042,7 +22042,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var store = (0, _redux.createStore)(_reducers2.default);
+	var store = (0, _redux.createStore)(_reducers2.default, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+	
 	exports.default = store;
 
 /***/ },
@@ -22118,23 +22119,32 @@
 	  switch (action.type) {
 	
 	    case types.GET_PLAYERS_SUCCESS:
-	      console.log(action);
 	
 	      return Object.assign({}, state, { players: action.players });
 	
 	    case types.DELETE_PLAYER_SUCCESS:
+	
 	      // Use lodash to create a new player array without the player we want to remove
-	      var newPlayers = _lodash2.default.filter(state.players, function (player) {
+	      var newDeletePlayers = _lodash2.default.filter(state.players, function (player) {
 	        return player.id != action.playerId;
 	      });
-	      console.log(newPlayers);
-	      return Object.assign({}, state, { players: newPlayers });
+	      return Object.assign({}, state, { players: newDeletePlayers });
 	
 	    case types.PLAYER_PROFILE_SUCCESS:
-	      console.log(action);
 	      return Object.assign({}, state, { playerProfile: action.playerProfile });
+	
+	    case types.POST_ASSOC_STORE_PLAYER_SUCCESS:
+	
+	      // let newProfile = action.data.playerProfile;
+	      // newProfile.StoreId = action.data.shop.id;
+	      // newProfile.shop = action.data.shop;
+	      var newProfile = Object.assign({}, action.data.playerProfile, { shop: action.data.shop });
+	      newProfile.StoreId = action.data.shop.id;
+	
+	      return Object.assign({}, state, { playerProfile: newProfile });
+	
 	  }
-	  console.log(state);
+	
 	  return state;
 	};
 	
@@ -22153,6 +22163,7 @@
 	var GET_PLAYERS_SUCCESS = exports.GET_PLAYERS_SUCCESS = 'GET_PLAYERS_SUCCESS';
 	var DELETE_PLAYER_SUCCESS = exports.DELETE_PLAYER_SUCCESS = 'DELETE_PLAYER_SUCCESS';
 	var PLAYER_PROFILE_SUCCESS = exports.PLAYER_PROFILE_SUCCESS = 'PLAYER_PROFILE_SUCCESS';
+	var POST_ASSOC_STORE_PLAYER_SUCCESS = exports.POST_ASSOC_STORE_PLAYER_SUCCESS = 'POST_ASSOC_STORE_PLAYER_SUCCESS';
 	
 	var GET_SHOPS_SUCCESS = exports.GET_SHOPS_SUCCESS = 'GET_SHOPS_SUCCESS';
 	var DELETE_SHOP_SUCCESS = exports.DELETE_SHOP_SUCCESS = 'DELETE_SHOP_SUCCESS';
@@ -39345,11 +39356,11 @@
 	
 	var _playerProfile2 = _interopRequireDefault(_playerProfile);
 	
-	var _shopListContainer = __webpack_require__(296);
+	var _shopListContainer = __webpack_require__(298);
 	
 	var _shopListContainer2 = _interopRequireDefault(_shopListContainer);
 	
-	var _shopList = __webpack_require__(297);
+	var _shopList = __webpack_require__(299);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
@@ -44818,6 +44829,7 @@
 	  value: true
 	});
 	exports.getPlayers = getPlayers;
+	exports.assocStoreToPlayer = assocStoreToPlayer;
 	exports.savePlayer = savePlayer;
 	exports.deletePlayer = deletePlayer;
 	exports.getProfile = getProfile;
@@ -44847,6 +44859,17 @@
 	  });
 	}
 	
+	function assocStoreToPlayer(playerProfile, shop) {
+	
+	  var data = { 'playerProfile': playerProfile, 'shop': shop };
+	
+	  $.post('http://localhost:8081/users/' + playerProfile.id + '/stores/' + shop.id, JSON.stringify(data)).then(function (response) {
+	    _store2.default.dispatch((0, _playerActions.assocStoreToPlayerSuccess)(data));
+	    return response;
+	  }).fail(function () {
+	    alert("error");
+	  });
+	}
 	/**
 	 * Search users
 	 */
@@ -44886,13 +44909,29 @@
 	  // from multiple XHR requests.
 	
 	  // Get the user data from our local database.
-	  return $.get('http://localhost:8081/users/' + userId).then(function (response) {
-	    var user = JSON.parse(response);
+	  var user = $.get('http://localhost:8081/users/' + userId);
+	  var shop = $.get('http://localhost:8081/users/' + userId + '/stores');
 	
+	  Promise.all([user, shop]).then(function (values) {
+	    var user = JSON.parse(values[0]);
+	    if (values[1] !== null) {
+	      var _shop = JSON.parse(values[1]);
+	      user.shop = _shop;
+	    }
 	    _store2.default.dispatch((0, _playerActions.playerProfileSuccess)(user));
-	
 	    return;
+	  }, function (reason) {
+	    console.log(reason);
 	  });
+	
+	  // return $.get('http://localhost:8081/users/' + userId)
+	  //   .then(response => {
+	  //       let user = JSON.parse(response);
+	  //       store.dispatch(playerProfileSuccess(user));
+	
+	  //       return;
+	
+	  //     });
 	}
 
 /***/ },
@@ -46396,6 +46435,7 @@
 	exports.getPlayersSuccess = getPlayersSuccess;
 	exports.deletePlayerSuccess = deletePlayerSuccess;
 	exports.playerProfileSuccess = playerProfileSuccess;
+	exports.assocStoreToPlayerSuccess = assocStoreToPlayerSuccess;
 	
 	var _actionTypes = __webpack_require__(200);
 	
@@ -46421,6 +46461,13 @@
 	  return {
 	    type: types.PLAYER_PROFILE_SUCCESS,
 	    playerProfile: playerProfile
+	  };
+	}
+	
+	function assocStoreToPlayerSuccess(data) {
+	  return {
+	    type: types.POST_ASSOC_STORE_PLAYER_SUCCESS,
+	    data: data
 	  };
 	}
 
@@ -56735,6 +56782,10 @@
 	
 	var playerApi = _interopRequireWildcard(_playerApi);
 	
+	var _shopApi = __webpack_require__(296);
+	
+	var shopApi = _interopRequireWildcard(_shopApi);
+	
 	var _searchLayoutActions = __webpack_require__(293);
 	
 	var _store = __webpack_require__(197);
@@ -56757,20 +56808,37 @@
 		function PlayerProfileContainer() {
 			_classCallCheck(this, PlayerProfileContainer);
 	
-			return _possibleConstructorReturn(this, (PlayerProfileContainer.__proto__ || Object.getPrototypeOf(PlayerProfileContainer)).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, (PlayerProfileContainer.__proto__ || Object.getPrototypeOf(PlayerProfileContainer)).call(this));
+	
+			_this.joinStore = _this.joinStore.bind(_this);
+			return _this;
 		}
 	
 		_createClass(PlayerProfileContainer, [{
+			key: 'joinStore',
+			value: function joinStore(e) {
+				var _this2 = this;
+	
+				e.preventDefault();
+				var shopKey = Object.keys(this.props.shops).filter(function (key) {
+					return _this2.props.shops[key].id == e.target.id;
+				});
+				playerApi.assocStoreToPlayer(this.props.playerProfile, this.props.shops[shopKey]);
+			}
+		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				playerApi.getProfile(this.props.params.playerId);
+				shopApi.getShops();
 			}
+			// ()=>playerApi.assocStoreToPlayer(2,1)
+	
 		}, {
 			key: 'render',
 			value: function render() {
-				console.log(this.props);
 	
-				return _react2.default.createElement(_playerProfile2.default, { profile: this.props.playerProfile });
+				return _react2.default.createElement(_playerProfile2.default, { profile: this.props.playerProfile, shops: this.props.shops,
+					joinStore: this.joinStore });
 			}
 		}]);
 	
@@ -56779,7 +56847,8 @@
 	
 	var mapStateToProps = function mapStateToProps(store) {
 		return {
-			playerProfile: store.playerState.playerProfile
+			playerProfile: store.playerState.playerProfile,
+			shops: store.shopState.shops
 		};
 	};
 	
@@ -56802,6 +56871,8 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRouter = __webpack_require__(204);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -56810,6 +56881,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	// .bind(null,this.props.profile.id,shop.id)
 	var PlayerProfile = exports.PlayerProfile = function (_React$Component) {
 	  _inherits(PlayerProfile, _React$Component);
 	
@@ -56822,14 +56894,93 @@
 	  _createClass(PlayerProfile, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
 	
-	      return _react2.default.createElement(
-	        'h1',
+	      var joinButtons = this.props.shops.map(function (shop) {
+	
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'button', onClick: _this2.props.joinStore, id: shop.id, key: shop.id },
+	          shop.name
+	        );;
+	      });
+	
+	      var shop = _react2.default.createElement(
+	        'li',
 	        null,
-	        'Player Profile for userId: ',
-	        this.props.profile.firstname,
-	        ' ',
-	        this.props.profile.lastname
+	        'Store: Click to Join (',
+	        joinButtons,
+	        ')'
+	      );
+	
+	      if (this.props.profile.shop) {
+	        shop = _react2.default.createElement(
+	          'li',
+	          null,
+	          'Store',
+	          _react2.default.createElement(
+	            'ul',
+	            null,
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              'Name: ',
+	              this.props.profile.shop.name
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              'Address: ',
+	              this.props.profile.shop.address
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              'Email: ',
+	              this.props.profile.shop.email
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              'Phone: ',
+	              this.props.profile.shop.phonenumnber
+	            )
+	          )
+	        );
+	      }
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'profile' },
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Name: ',
+	            this.props.profile.firstname,
+	            ' ',
+	            this.props.profile.lastname
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Email: ',
+	            this.props.profile.email
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Phone: ',
+	            this.props.profile.phonenumber
+	          ),
+	          shop
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/players' },
+	          'Back to list'
+	        )
 	      );
 	    }
 	  }]);
@@ -56848,6 +56999,80 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getShops = getShops;
+	
+	var _axios = __webpack_require__(266);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _store = __webpack_require__(197);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _shopActions = __webpack_require__(297);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Get all shops
+	 */
+	
+	function getShops() {
+	  return _axios2.default.get('http://localhost:8081/stores').then(function (response) {
+	    _store2.default.dispatch((0, _shopActions.getShopsSuccess)(response.data));
+	    return response;
+	  });
+	}
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getShopsSuccess = getShopsSuccess;
+	exports.deleteShopSuccess = deleteShopSuccess;
+	exports.shopProfileSuccess = shopProfileSuccess;
+	
+	var _actionTypes = __webpack_require__(200);
+	
+	var types = _interopRequireWildcard(_actionTypes);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function getShopsSuccess(shops) {
+	  return {
+	    type: types.GET_SHOPS_SUCCESS,
+	    shops: shops
+	  };
+	}
+	
+	function deleteShopSuccess(shopId) {
+	  return {
+	    type: types.DELETE_SHOP_SUCCESS,
+	    shopID: shopID
+	  };
+	}
+	
+	function shopProfileSuccess(shopProfile) {
+	  return {
+	    type: types.SHOP_PROFILE_SUCCESS,
+	    shopProfile: shopProfile
+	  };
+	}
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 	exports.ShopListContainer = undefined;
@@ -56860,11 +57085,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _shopList = __webpack_require__(297);
+	var _shopList = __webpack_require__(299);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
-	var _shopApi = __webpack_require__(298);
+	var _shopApi = __webpack_require__(296);
 	
 	var shopApi = _interopRequireWildcard(_shopApi);
 	
@@ -56919,7 +57144,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(ShopListContainer);
 
 /***/ },
-/* 297 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56981,80 +57206,6 @@
 	;
 	
 	exports.default = ShopList;
-
-/***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getShops = getShops;
-	
-	var _axios = __webpack_require__(266);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
-	var _store = __webpack_require__(197);
-	
-	var _store2 = _interopRequireDefault(_store);
-	
-	var _shopActions = __webpack_require__(299);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Get all shops
-	 */
-	
-	function getShops() {
-	  return _axios2.default.get('http://localhost:8081/stores').then(function (response) {
-	    _store2.default.dispatch((0, _shopActions.getShopsSuccess)(response.data));
-	    return response;
-	  });
-	}
-
-/***/ },
-/* 299 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getShopsSuccess = getShopsSuccess;
-	exports.deleteShopSuccess = deleteShopSuccess;
-	exports.shopProfileSuccess = shopProfileSuccess;
-	
-	var _actionTypes = __webpack_require__(200);
-	
-	var types = _interopRequireWildcard(_actionTypes);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function getShopsSuccess(shops) {
-	  return {
-	    type: types.GET_SHOPS_SUCCESS,
-	    shops: shops
-	  };
-	}
-	
-	function deleteShopSuccess(shopId) {
-	  return {
-	    type: types.DELETE_SHOP_SUCCESS,
-	    shopID: shopID
-	  };
-	}
-	
-	function shopProfileSuccess(shopProfile) {
-	  return {
-	    type: types.SHOP_PROFILE_SUCCESS,
-	    shopProfile: shopProfile
-	  };
-	}
 
 /***/ },
 /* 300 */

@@ -1,6 +1,7 @@
 import * as types from '../actions/action-types';
 
 
+
 export function getPlayersSuccess(players) {
   return {
     type: types.GET_PLAYERS_SUCCESS,
@@ -19,5 +20,12 @@ export function playerProfileSuccess(playerProfile) {
   return {
     type: types.PLAYER_PROFILE_SUCCESS,
     playerProfile
+  };
+}
+
+export function assocStoreToPlayerSuccess(data) {
+  return {
+    type: types.POST_ASSOC_STORE_PLAYER_SUCCESS,
+    data
   };
 }

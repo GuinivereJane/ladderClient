@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PlayerList from '../views/player-list';
 import * as playerApi from '../../api/player-api';
+
 import { loadSearchLayout } from '../../actions/search-layout-actions';
 import store from '../../store';
 

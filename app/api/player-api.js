@@ -1,6 +1,9 @@
 import axios from 'axios';
 import store from '../store';
-import { getPlayersSuccess, deletePlayerSuccess, playerProfileSuccess } from '../actions/player-actions';
+import { getPlayersSuccess,
+         deletePlayerSuccess,
+         playerProfileSuccess,
+         assocStoreToPlayerSuccess } from '../actions/player-actions';
 
 var $ = require('jQuery');
 
@@ -16,6 +19,18 @@ export function getPlayers() {
     });
 }
 
+export function assocStoreToPlayer(playerProfile,shop){
+
+      let data={'playerProfile':playerProfile,'shop':shop};
+
+   $.post(`http://localhost:8081/users/${playerProfile.id}/stores/${shop.id}`,JSON.stringify(data))
+    .then(response => {  
+      store.dispatch(assocStoreToPlayerSuccess(data));
+      return response;
+    }).fail(function() {
+    alert( "error" );
+  })
+}
 /**
  * Search users
  */
@@ -59,15 +74,28 @@ export function getProfile(userId) {
   // from multiple XHR requests.
 
   // Get the user data from our local database.
-  return $.get('http://localhost:8081/users/' + userId)
-    .then(response => {
-        let user = JSON.parse(response);
+  let user = $.get('http://localhost:8081/users/' + userId);
+  let shop = $.get(`http://localhost:8081/users/${userId}/stores`);
 
-   
-          store.dispatch(playerProfileSuccess(user));
+  Promise.all([user,shop]).then((values)=>{
+    let user = JSON.parse(values[0]);
+    if (values[1] !== null){ 
+      let shop= JSON.parse(values[1]);
+      user.shop = shop;
+    }
+    store.dispatch(playerProfileSuccess(user));
+    return;
+  }, reason =>{
+    console.log(reason);
+  });
 
-        return;
+  // return $.get('http://localhost:8081/users/' + userId)
+  //   .then(response => {
+  //       let user = JSON.parse(response);
+  //       store.dispatch(playerProfileSuccess(user));
 
-      });
+  //       return;
+
+  //     });
 
 }
