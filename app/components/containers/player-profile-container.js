@@ -14,6 +14,7 @@ export class PlayerProfileContainer extends React.Component {
 	constructor(){
 		super()
 		this.joinStore=this.joinStore.bind(this);
+		this.leaveStore=this.leaveStore.bind(this);
 	}
 
 	joinStore(e){
@@ -24,6 +25,14 @@ export class PlayerProfileContainer extends React.Component {
 		playerApi.assocStoreToPlayer(this.props.playerProfile, this.props.shops[shopKey]);
 
 	}
+
+	leaveStore(e){
+		e.preventDefault();
+		let shopId = e.target.id;
+		playerApi.removeStoreFromPlayer(this.props.playerProfile.id, shopId);
+
+	}
+
 	componentDidMount(){
 		playerApi.getProfile(this.props.params.playerId);
 		shopApi.getShops();
@@ -33,7 +42,8 @@ export class PlayerProfileContainer extends React.Component {
 
 		return (
 				<PlayerProfile profile={this.props.playerProfile} shops={this.props.shops} 
-												joinStore={this.joinStore}/>
+												joinStore={this.joinStore}
+												leaveStore={this.leaveStore}/>
 			);
 	}
 }

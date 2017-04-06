@@ -5,12 +5,10 @@ import { Link } from 'react-router';
 export class PlayerProfile extends React.Component {
   render() {
   	let joinButtons = this.props.shops.map((shop)=>{
-
   		return (<div className="button" onClick={this.props.joinStore} id={shop.id} key={shop.id}>{shop.name}</div>);;
   	});
 
   	let shop = (<li>Store: Click to Join ({joinButtons})</li>);
-
 
   	if (this.props.profile.shop){
   		shop=(<li>Store
@@ -20,9 +18,15 @@ export class PlayerProfile extends React.Component {
 								<li>Email: {this.props.profile.shop.email}</li>
 								<li>Phone: {this.props.profile.shop.phonenumnber}</li>
 							</ul>
+							<div className="button" onClick={this.props.leaveStore} 
+																			id={this.props.profile.shop.id}>
+								Remove Store
+							</div>
+
 						</li>)
   	}
-    return (<div className="profile">
+
+    return (<div className="player-profile">
 	    				<ul>
 	    					<li>Name: {this.props.profile.firstname} {this.props.profile.lastname}</li>
 	    					<li>Email: {this.props.profile.email}</li>

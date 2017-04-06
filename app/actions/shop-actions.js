@@ -20,3 +20,4 @@ export function shopProfileSuccess(shopProfile) {
     shopProfile
   };
 }
+

@@ -23,6 +23,13 @@ export function playerProfileSuccess(playerProfile) {
   };
 }
 
+export function removeStoreFromPlayerSuccess(data) {
+  return {
+    type: types.POST_REMOVE_STORE_PLAYER_SUCCESS,
+    data
+  };
+}
+
 export function assocStoreToPlayerSuccess(data) {
   return {
     type: types.POST_ASSOC_STORE_PLAYER_SUCCESS,

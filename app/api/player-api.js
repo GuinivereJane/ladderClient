@@ -3,9 +3,10 @@ import store from '../store';
 import { getPlayersSuccess,
          deletePlayerSuccess,
          playerProfileSuccess,
-         assocStoreToPlayerSuccess } from '../actions/player-actions';
-
-var $ = require('jQuery');
+         assocStoreToPlayerSuccess,
+       removeStoreFromPlayerSuccess} from '../actions/player-actions';
+import $ from 'jQuery';
+//var $ = require('jQuery');
 
 /**
  * Get all users
@@ -20,12 +21,28 @@ export function getPlayers() {
 }
 
 export function assocStoreToPlayer(playerProfile,shop){
-
-      let data={'playerProfile':playerProfile,'shop':shop};
+//accepts profile object and shop object
+   let data={'playerProfile':playerProfile,'shop':shop};
 
    $.post(`http://localhost:8081/users/${playerProfile.id}/stores/${shop.id}`,JSON.stringify(data))
     .then(response => {  
       store.dispatch(assocStoreToPlayerSuccess(data));
+      return response;
+    }).fail(function() {
+    alert( "error" );
+  })
+}
+
+export function removeStoreFromPlayer(playerId,shopId){
+
+  let data={'playerId':playerId,'shopId':shopId};
+
+  $.ajax({
+    url: `http://localhost:8081/users/${playerId}/stores/${shopId}`,
+    type: 'DELETE',
+    }).then(response => {  
+      console.log(removeStoreFromPlayerSuccess(data))
+      store.dispatch(removeStoreFromPlayerSuccess(data));
       return response;
     }).fail(function() {
     alert( "error" );

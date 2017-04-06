@@ -9,7 +9,7 @@ export class ShopList extends React.Component {
        {this.props.shops.map((shop)=>{
           return (
             <li key={shop.id}>
-              <Link to={'/shop/' + shop.id}>{shop.name}</Link>
+              <Link to={'/shops/' + shop.id}>{shop.name}</Link>
            </li>
            );
         })}
