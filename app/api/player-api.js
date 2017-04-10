@@ -68,9 +68,11 @@ export function removeStoreFromPlayer(playerId,shopId){
       
      return $.post('http://localhost:8081/users',newPlayer)
       .done(response=>{store.dispatch(savePlayerSuccess(newPlayer));
-        return;})
+       window.location = "http://localhost:3000/players" //this needs to be replace with a proper redirect
+
+        return true;})
       .fail(error=>{store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
-        return;});
+        return false;});
      //if there is an error update an error state in flux, the form will detect it in props and show the result
     
  }

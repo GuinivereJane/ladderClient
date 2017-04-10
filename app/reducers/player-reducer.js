@@ -34,9 +34,8 @@ const playerReducer = function(state = initialState, action) {
       //return Object.assign({}, state,{playerProfile:removeProfile});
     
     case types.POST_SAVE_PLAYER_SUCCESS:
-      console.log('success');
-      const newPlayers = {...state.players, newPlayer}
-      return {...state, players:newPlayers}
+      
+      return {...state}
       
   }
 

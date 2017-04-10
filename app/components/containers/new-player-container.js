@@ -7,7 +7,10 @@ import store from '../../store';
 
 
 export class NewPlayerContainer extends React.Component {
-
+	constructor(){
+		super()
+		this.handleSubmit=this.handleSubmit.bind(this);
+	}
 
 	handleSubmit(e){
 		e.preventDefault();
@@ -22,9 +25,7 @@ export class NewPlayerContainer extends React.Component {
     		}
     	
 		playerApi.savePlayer(data);
-
-
-		
+	
 	}
 
 	render(){

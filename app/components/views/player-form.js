@@ -10,7 +10,7 @@ export class PlayerForm extends React.Component {
   errorMessage(errors){
     if (errors.length > 0){
 
-      let errorList = errors.map((error)=>{
+      let errorList = this.props.errors.map((error)=>{
         return <div classNamne='error'>{error.type} : {error.path}</div>;
       });
       return (<div className = 'error-list'>

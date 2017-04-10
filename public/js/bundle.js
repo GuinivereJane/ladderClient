@@ -22156,9 +22156,8 @@
 	    //return Object.assign({}, state,{playerProfile:removeProfile});
 	
 	    case types.POST_SAVE_PLAYER_SUCCESS:
-	      console.log('success');
-	      var newPlayers = _extends({}, state.players, { newPlayer: newPlayer });
-	      return _extends({}, state, { players: newPlayers });
+	
+	      return _extends({}, state);
 	
 	  }
 	
@@ -45041,10 +45040,12 @@
 	
 	  return _jQuery2.default.post('http://localhost:8081/users', newPlayer).done(function (response) {
 	    _store2.default.dispatch((0, _playerActions.savePlayerSuccess)(newPlayer));
-	    return;
+	    window.location = "http://localhost:3000/players"; //this needs to be replace with a proper redirect
+	
+	    return true;
 	  }).fail(function (error) {
 	    _store2.default.dispatch((0, _playerActions.savePlayerFailure)(error.responseJSON)); //on a fail just pass the errors, not the whole error
-	    return;
+	    return false;
 	  });
 	  //if there is an error update an error state in flux, the form will detect it in props and show the result
 	}
@@ -57941,7 +57942,10 @@
 		function NewPlayerContainer() {
 			_classCallCheck(this, NewPlayerContainer);
 	
-			return _possibleConstructorReturn(this, (NewPlayerContainer.__proto__ || Object.getPrototypeOf(NewPlayerContainer)).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, (NewPlayerContainer.__proto__ || Object.getPrototypeOf(NewPlayerContainer)).call(this));
+	
+			_this.handleSubmit = _this.handleSubmit.bind(_this);
+			return _this;
 		}
 	
 		_createClass(NewPlayerContainer, [{
@@ -58025,7 +58029,7 @@
 	    value: function errorMessage(errors) {
 	      if (errors.length > 0) {
 	
-	        var errorList = errors.map(function (error) {
+	        var errorList = this.props.errors.map(function (error) {
 	          return _react2.default.createElement(
 	            'div',
 	            { classNamne: 'error' },
@@ -58034,8 +58038,6 @@
 	            error.path
 	          );
 	        });
-	        console.log(errorList);
-	
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'error-list' },
