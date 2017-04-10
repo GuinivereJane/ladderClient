@@ -4,7 +4,6 @@ import _ from 'lodash';
 const initialState = {
   shops: [],
   shopProfile: {
-    repos: []
   }
 };
 

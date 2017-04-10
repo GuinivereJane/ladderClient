@@ -9,6 +9,7 @@ import SearchLayout from './components/layouts/search-layout';
 import PlayerListContainer from './components/containers/player-list-container';
 import PlayerProfileContainer from './components/containers/player-profile-container';
 import ShopProfileContainer from './components/containers/shop-profile-container';
+import NewGameContainer from './components/containers/new-game-container';
 
 import PlayerProfile from './components/views/player-profile';
 import ShopListContainer from './components/containers/shop-list-container';
@@ -30,7 +31,9 @@ export default (
         <Route path="shops">
             <IndexRoute component={ShopListContainer} />
             <Route path=":shopId" component={ShopProfileContainer} />
-
+        </Route>
+        <Route path="games">
+          <IndexRoute component={NewGameContainer} />
         </Route>
     </Route>
   </Router>

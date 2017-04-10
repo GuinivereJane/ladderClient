@@ -15,6 +15,7 @@ export class MainLayout extends React.Component {
             <li><Link to="/" activeClassName="active">Home</Link></li>
             <li><Link to="/players" activeClassName="active">Players</Link></li>
             <li><Link to="/shops" activeClassName="active">Shops</Link></li>
+            <li><Link to="/games" activeClassName="active">Log a Game</Link></li>
           </ul>
         </aside>
 

@@ -5,7 +5,7 @@ const initialState = {
   players: [],
   playerProfile: {
     repos: []
-  }
+  },
 };
 
 const playerReducer = function(state = initialState, action) {
@@ -32,6 +32,11 @@ const playerReducer = function(state = initialState, action) {
       const removeProfile = {...state.playerProfile, StoreId:null, shop:null};
       return {...state, playerProfile:removeProfile}
       //return Object.assign({}, state,{playerProfile:removeProfile});
+    
+    case types.POST_SAVE_PLAYER_SUCCESS:
+      console.log('success');
+      const newPlayers = {...state.players, newPlayer}
+      return {...state, players:newPlayers}
       
   }
 

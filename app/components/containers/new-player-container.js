@@ -22,20 +22,22 @@ export class NewPlayerContainer extends React.Component {
     		}
     	
 		playerApi.savePlayer(data);
-		window.location = "http://localhost:3000/players"
 
+
+		
 	}
 
 	render(){
 		return (
-			<PlayerForm players={this.props.players} savePlayer={this.handleSubmit}/>
+			<PlayerForm players={this.props.players} errors={this.props.errors} savePlayer={this.handleSubmit}/>
 		);
 	}
 }
 
 const mapStateToProps = function(store) {
 	return {
-  	players: store.playerState.players
+  	players: store.playerState.players,
+  	errors: store.errorState.errors
 	};
 };
 

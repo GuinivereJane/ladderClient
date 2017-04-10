@@ -8,7 +8,19 @@ export function getPlayersSuccess(players) {
     players
   };
 }
-
+export function savePlayerSuccess(newPlayer) {
+  return {
+    type: types.POST_SAVE_PLAYER_SUCCESS,
+    newPlayer
+  };
+}
+export function savePlayerFailure(errors) {
+  //errors are generic, and are handeld by the error reducer
+  return {
+    type: types.POST_ERROR,
+    errors
+  };
+}
 export function deletePlayerSuccess(playerId) {
   return {
     type: types.DELETE_PLAYER_SUCCESS,

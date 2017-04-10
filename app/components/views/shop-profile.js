@@ -6,22 +6,23 @@ export class ShopProfile extends React.Component {
   render() {
   	
   	let players = <li>There are no players registered yet for this store</li>	
-  		if (typeof this.props.shopProfile.players !== 'undefined'){
+  	if (typeof this.props.shopProfile.players !== 'undefined' &&
+  		      this.props.shopProfile.players.length >0){
+
   		let playerList = this.props.shopProfile.players.map((player)=>{
-  		return(<ul>
-  						<li>Name: {player.firstname} {player.lastname}</li>
-	    				<li>Email: {player.email}</li>
-	    				<li>Phone: {player.phonenumber}</li>
-	    			 </ul>
+  		return(<li key={player.email}>
+  						<div>Name: {player.firstname} {player.lastname}</div>
+	    				<div>Email: {player.email}</div>
+	    				<div>Phone: {player.phonenumber}</div>
+	    			 </li>
   			);
   		});
   		players = <li>Players Regeistered for this store
+  								<ol>
   								{playerList}
+  								</ol>
   							</li>
   	}
-
-
-
   	
     return (<div className="shop-profile">
 	    				<ul>

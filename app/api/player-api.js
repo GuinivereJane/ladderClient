@@ -4,9 +4,10 @@ import { getPlayersSuccess,
          deletePlayerSuccess,
          playerProfileSuccess,
          assocStoreToPlayerSuccess,
-       removeStoreFromPlayerSuccess} from '../actions/player-actions';
+       removeStoreFromPlayerSuccess,
+          savePlayerSuccess,
+          savePlayerFailure} from '../actions/player-actions';
 import $ from 'jQuery';
-//var $ = require('jQuery');
 
 /**
  * Get all users
@@ -63,13 +64,14 @@ export function removeStoreFromPlayer(playerId,shopId){
 /**
  * Delete a user
  */
- export function savePlayer(data){
+ export function savePlayer(newPlayer){
       
-      $.post('http://localhost:8081/users',data)
-      .then(response =>{
-        return response;
-      }
-      );
+     return $.post('http://localhost:8081/users',newPlayer)
+      .done(response=>{store.dispatch(savePlayerSuccess(newPlayer));
+        return;})
+      .fail(error=>{store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
+        return;});
+     //if there is an error update an error state in flux, the form will detect it in props and show the result
     
  }
 
