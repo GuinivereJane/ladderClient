@@ -1,6 +1,27 @@
 import * as types from '../actions/action-types';
 
+export function loginSuccess(playerId) {
+  return {
+    type: types.LOGIN_SUCCESS,
+    playerId
+  };
+}
 
+export function playerError(error){
+   let errors=[error];  //put singular error into an arrary for the error handler
+   return {
+    type: types.POST_ERROR,
+    errors
+  };
+ }
+
+
+export function logoutSuccess(playerId) {
+  return {
+    type: types.LOGOUT_SUCCESS,
+    playerId
+  };
+}
 
 export function getPlayersSuccess(players) {
   return {

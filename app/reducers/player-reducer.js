@@ -1,11 +1,14 @@
 import * as types from '../actions/action-types';
 import _ from 'lodash';
+var jwtDecode = require('jwt-decode');
+
 
 const initialState = {
   players: [],
   playerProfile: {
     repos: []
   },
+  playerId:""//jwtDecode(localStorage.getItem('token')).id  //if there is a loged in player, make sure they are in the stat
 };
 
 const playerReducer = function(state = initialState, action) {
@@ -13,12 +16,17 @@ const playerReducer = function(state = initialState, action) {
   switch(action.type) {
 
     case types.GET_PLAYERS_SUCCESS:
-      return Object.assign({}, state, { players: action.players });
+        return Object.assign({}, state, { players: action.players });
+    
+    case types.LOGIN_SUCCESS:
+      return Object.assign({}, state, { playerId: action.playerId });
+    
+    case types.LOGOUT_SUCCESS:
+      return Object.assign({}, state, { playerId: "" });
 
     case types.DELETE_PLAYER_SUCCESS:
       // Use lodash to create a new player array without the player we want to remove
       const newDeletePlayers = _.filter(state.players, player => player.id != action.playerId);
-      const newSearchResults =  _.filter(state.searchReults, player => player.id != action.playerId);
       return Object.assign({}, state, { players: newDeletePlayers });
 
     case types.PLAYER_PROFILE_SUCCESS:

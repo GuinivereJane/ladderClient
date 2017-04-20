@@ -6,6 +6,9 @@ export const POST_ASSOC_STORE_PLAYER_SUCCESS = 'POST_ASSOC_STORE_PLAYER_SUCCESS'
 export const POST_REMOVE_STORE_PLAYER_SUCCESS = 'POST_REMOVE_STORE_PLAYER_SUCCESS';
 export const POST_SAVE_PLAYER_SUCCESS = 'POST_SAVE_PLAYER_SUCCESS';
 
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+
 //Errors
 export const POST_ERROR = 'POST_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR'; //ensures that the error state is reset after successfully completing an action

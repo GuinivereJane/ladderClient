@@ -18,10 +18,12 @@ export class NewPlayerContainer extends React.Component {
     let firstName = e.target.firstname.value;
     let lastName = e.target.lastname.value;
     let emailAddr = e.target.email.value;
+    let password = e.target.password.value;
 
     let data={firstname:firstName,
     			lastname:lastName,
-    			email:emailAddr
+    			email:emailAddr,
+    			password:password
     		}
     const from = this.props.location.pathname
 		playerApi.savePlayer(data)

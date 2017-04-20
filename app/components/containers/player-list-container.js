@@ -22,7 +22,8 @@ export class PlayerListContainer extends React.Component {
 	render(){
 
 		return (
-			<PlayerList players={this.props.players} 
+			<PlayerList players={this.props.players}
+									playerId={this.props.playerId}
 									searchResults={this.props.searchResults}
 									deletePlayer={playerApi.deletePlayer}/>
 			);
@@ -32,6 +33,7 @@ export class PlayerListContainer extends React.Component {
 const mapStateToProps = function(store) {
 	return {
   	players: store.playerState.players,
+  	playerId: store.playerState.playerId,
   	searchResults :store.searchState.searchResults
 
 	};

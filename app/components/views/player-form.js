@@ -22,10 +22,11 @@ export class PlayerForm extends React.Component {
    
   }
   render() {
+    let errors = <div></div>;
+    if (this.props.errors){
+      let errors = this.errorMessage(this.props.errors);
 
-    let errors = this.errorMessage(this.props.errors);
-
-        
+    }
 
     return (
     <div className='post-form'> 
@@ -45,6 +46,11 @@ export class PlayerForm extends React.Component {
         <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input type="text" name="email"/>
+        </div>
+
+         <div className="input-component">
+          <label htmlFor="password">Password:</label>
+          <input type="password" name="password"/>
         </div>
 
         <input type="submit" value="Submit" />
