@@ -12,6 +12,8 @@ export class MainLayout extends React.Component {
 
         <aside className="primary-aside">
           <ul>
+            <li><Link to="/login" activeClassName="active">Log in to Ladder</Link></li>
+
             <li><Link to="/" activeClassName="active">Home</Link></li>
             <li><Link to="/players" activeClassName="active">Players</Link></li>
             <li><Link to="/shops" activeClassName="active">Shops</Link></li>

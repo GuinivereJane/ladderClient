@@ -10,6 +10,7 @@ import PlayerListContainer from './components/containers/player-list-container';
 import PlayerProfileContainer from './components/containers/player-profile-container';
 import ShopProfileContainer from './components/containers/shop-profile-container';
 import NewGameContainer from './components/containers/new-game-container';
+import LoginFormContainer from './components/containers/login-form-container';
 
 import PlayerProfile from './components/views/player-profile';
 import ShopListContainer from './components/containers/shop-list-container';
@@ -23,13 +24,21 @@ export default (
     <Route component={MainLayout}>
         <Route path="/" />
         <Route path="players">
-          <IndexRoute component={PlayerListContainer} />
+          <Route component={SearchLayout} searchType={"players"}>
+           <IndexRoute component={PlayerListContainer} />
+          </Route>
           <Route path="new" component = {NewPlayerContainer} />
           <Route path=":playerId" component={PlayerProfileContainer} />
         </Route>
+        <Route path="login">
+          <IndexRoute component={LoginFormContainer}/>
+        </Route>
 
         <Route path="shops">
-            <IndexRoute component={ShopListContainer} />
+            <Route component={SearchLayout} searchType={"shops"}>
+              <IndexRoute component={ShopListContainer} />
+            </Route>
+
             <Route path=":shopId" component={ShopProfileContainer} />
         </Route>
         <Route path="games">

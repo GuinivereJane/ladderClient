@@ -6,7 +6,7 @@ export class ShopList extends React.Component {
   render() {
     return (
       <ul className = "shop-list">
-       {this.props.shops.map((shop)=>{
+       {this.props.searchResults.map((shop)=>{
           return (
             <li key={shop.id}>
               <Link to={'/shops/' + shop.id}>{shop.name}</Link>

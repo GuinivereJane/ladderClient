@@ -4,7 +4,6 @@ import PlayerProfile from '../views/player-profile';
 import * as playerApi from '../../api/player-api';
 import * as shopApi from '../../api/shop-api';
 
-import { loadSearchLayout } from '../../actions/search-layout-actions';
 import store from '../../store';
 
 

@@ -6,13 +6,17 @@ export const POST_ASSOC_STORE_PLAYER_SUCCESS = 'POST_ASSOC_STORE_PLAYER_SUCCESS'
 export const POST_REMOVE_STORE_PLAYER_SUCCESS = 'POST_REMOVE_STORE_PLAYER_SUCCESS';
 export const POST_SAVE_PLAYER_SUCCESS = 'POST_SAVE_PLAYER_SUCCESS';
 
+//Errors
 export const POST_ERROR = 'POST_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR'; //ensures that the error state is reset after successfully completing an action
 
 
+export const GET_ALLIANCES_SUCCESS = 'GET_ALLIANCES_SUCCESS';
+
+export const GET_FACTIONS_SUCCESS = 'GET_FACTIONS_SUCCESS';
+
 
 export const SAVE_GAME_SUCCESS = 'SAVE_GAME_SUCCESS';
-
 
 
 export const GET_SHOPS_SUCCESS = 'GET_SHOPS_SUCCESS';
@@ -22,4 +26,5 @@ export const SHOP_PROFILE_SUCCESS = 'SHOP_PROFILE_SUCCESS';
 
 
 // Search Layout
-export const LOAD_SEARCH_LAYOUT = 'LOAD_SEARCH_LAYOUT';
+export const SEARCH_UPDATE = 'SEARCH_UPDATE';
+

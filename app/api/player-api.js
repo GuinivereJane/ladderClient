@@ -4,9 +4,9 @@ import { getPlayersSuccess,
          deletePlayerSuccess,
          playerProfileSuccess,
          assocStoreToPlayerSuccess,
-       removeStoreFromPlayerSuccess,
-          savePlayerSuccess,
-          savePlayerFailure} from '../actions/player-actions';
+         removeStoreFromPlayerSuccess,
+         savePlayerSuccess,
+         savePlayerFailure} from '../actions/player-actions';
 import $ from 'jQuery';
 
 /**
@@ -54,7 +54,7 @@ export function removeStoreFromPlayer(playerId,shopId){
  */
 
 // export function searchUsers(query = '') {
-//   return axios.get('http://localhost:3001/users?q='+ query)
+//   return ?.get('http://localhost:3001/users?q='+ query)
 //     .then(response => {
 //       store.dispatch(getUsersSuccess(response.data));
 //       return response;
@@ -68,8 +68,6 @@ export function removeStoreFromPlayer(playerId,shopId){
       
      return $.post('http://localhost:8081/users',newPlayer)
       .done(response=>{store.dispatch(savePlayerSuccess(newPlayer));
-       window.location = "http://localhost:3000/players" //this needs to be replace with a proper redirect
-
         return true;})
       .fail(error=>{store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
         return false;});

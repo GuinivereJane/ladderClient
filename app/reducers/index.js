@@ -5,6 +5,10 @@ import playerReducer from './player-reducer';
 import shopReducer from './shop-reducer';
 import gameReducer from './game-reducer';
 import errorReducer from './error-reducer';
+import searchReducer from './search-reducer';
+import allianceReducer from './alliance-reducer';
+import factionReducer from './faction-reducer';
+
 
 
 
@@ -16,9 +20,10 @@ var reducers = combineReducers({
     playerState: playerReducer,
     shopState: shopReducer,
     gameState: gameReducer,
-    errorState: errorReducer
-    //widgetState: widgetReducer,
-    //searchLayoutState: searchLayoutReducer
+    errorState: errorReducer,
+    searchState: searchReducer,
+    factionState: factionReducer,
+    allianceState: allianceReducer
 });
 
 export default reducers;

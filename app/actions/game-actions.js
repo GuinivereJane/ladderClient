@@ -6,3 +6,10 @@ export function saveGameSuccess(game) {
     game
   };
 }
+
+export function saveGameFailure(errors) {
+  return {
+    type: types.POST_ERROR,
+    errors
+  };
+}

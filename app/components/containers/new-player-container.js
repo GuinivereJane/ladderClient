@@ -23,12 +23,18 @@ export class NewPlayerContainer extends React.Component {
     			lastname:lastName,
     			email:emailAddr
     		}
-    	
-		playerApi.savePlayer(data);
+    const from = this.props.location.pathname
+		playerApi.savePlayer(data)
+		//.done only fires if the API returns with no error.  If there is an error the 
+		//errorState is updated and the results appear on the page.
+			.done(()=>{window.location = "http://localhost:3000/players"})
+
+
 	
 	}
 
 	render(){
+
 		return (
 			<PlayerForm players={this.props.players} errors={this.props.errors} savePlayer={this.handleSubmit}/>
 		);

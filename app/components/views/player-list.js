@@ -12,7 +12,7 @@ export class PlayerList extends React.Component {
     return (
       <div>
       <ul className = "player-list">
-       {this.props.players.map((player)=>{
+       {this.props.searchResults.map((player)=>{
           return (
             <li key={player.id}>
               <Link to={'/players/' + player.id}>{player.firstname}</Link>

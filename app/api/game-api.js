@@ -1,14 +1,25 @@
 import store from '../store';
-import {saveGameSuccess} from '../actions/game-actions';
+import {saveGameSuccess,
+				saveGameFailure} from '../actions/game-actions';
 import $ from 'jQuery';
 
 export function saveGame(data){
-      $.post('http://localhost:8081/games',data)
-      .then(response =>{
-      	//console.log(saveGameSuccess(data))
-      	store.dispatch(saveGameSuccess(data));
-        return response;
-      }
-      );
+      return $.post('http://localhost:8081/games',data)
+      .then(response =>{store.dispatch(saveGameSuccess(data));
+        return true;})
+      .fail((error)=>{
+      	store.dispatch(saveGameFailure(error.responseJSON));
+      	return false});
     
  }
+
+ // export function savePlayer(newPlayer){
+      
+ //     return $.post('http://localhost:8081/users',newPlayer)
+ //      .done(response=>{store.dispatch(savePlayerSuccess(newPlayer));
+ //        return true;})
+ //      .fail(error=>{store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
+ //        return false;});
+ //     //if there is an error update an error state in flux, the form will detect it in props and show the result
+    
+ // }

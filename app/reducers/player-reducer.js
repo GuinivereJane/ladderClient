@@ -18,6 +18,7 @@ const playerReducer = function(state = initialState, action) {
     case types.DELETE_PLAYER_SUCCESS:
       // Use lodash to create a new player array without the player we want to remove
       const newDeletePlayers = _.filter(state.players, player => player.id != action.playerId);
+      const newSearchResults =  _.filter(state.searchReults, player => player.id != action.playerId);
       return Object.assign({}, state, { players: newDeletePlayers });
 
     case types.PLAYER_PROFILE_SUCCESS:
