@@ -3,12 +3,20 @@ import _ from 'lodash';
 var jwtDecode = require('jwt-decode');
 
 
+let playerId = -1;
+console.log("token-"+localStorage.getItem('token'))
+if (localStorage.getItem('token') != null){
+  console.log('next step');
+  playerId = jwtDecode(localStorage.getItem('token')).id  //if there is a loged in player, make sure they are in the stat
+}
+console.log(playerId);
+
 const initialState = {
   players: [],
   playerProfile: {
     repos: []
   },
-  playerId:""//jwtDecode(localStorage.getItem('token')).id  //if there is a loged in player, make sure they are in the stat
+  playerId:playerId
 };
 
 const playerReducer = function(state = initialState, action) {
@@ -19,10 +27,11 @@ const playerReducer = function(state = initialState, action) {
         return Object.assign({}, state, { players: action.players });
     
     case types.LOGIN_SUCCESS:
-      return Object.assign({}, state, { playerId: action.playerId });
+    console.log('success!!')
+      return {...state, playerId: action.playerId };
     
     case types.LOGOUT_SUCCESS:
-      return Object.assign({}, state, { playerId: "" });
+      return {...state, playerId: action.playerId };
 
     case types.DELETE_PLAYER_SUCCESS:
       // Use lodash to create a new player array without the player we want to remove

@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
+import PlayerList from './player-list';
+import * as playerApi from '../../api/player-api';
+
 
 // .bind(null,this.props.profile.id,shop.id)
 export class ShopProfile extends React.Component {
@@ -30,8 +33,12 @@ export class ShopProfile extends React.Component {
 	    					<li>Email: {this.props.shopProfile.email}</li>
 	    					<li>Phone: {this.props.shopProfile.phonenumber}</li>
 	    					<li>Address: {this.props.shopProfile.address}</li>
-	    					{players}
-	    				</ul>
+                <li>Players:
+                <PlayerList players={this.props.shopProfile.players}
+                  deletePlayer={playerApi.deletePlayer}
+                  playerId={this.props.playerId}/>	
+                </li>
+              </ul>
 	    				<Link to={'/shops'}>Back to list</Link>
     				</div>
     				);

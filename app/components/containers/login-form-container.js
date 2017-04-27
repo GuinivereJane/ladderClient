@@ -3,6 +3,7 @@ import LoginForm from '../views/login-form';
 import React from 'react';
 import {connect} from 'react-redux';
 import * as loginApi from '../../api/login-api';
+import { browserHistory } from 'react-router'
 
 export class LoginContainer extends React.Component {
 

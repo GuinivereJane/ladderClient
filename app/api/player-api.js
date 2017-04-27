@@ -7,6 +7,10 @@ import { getPlayersSuccess,
          removeStoreFromPlayerSuccess,
          savePlayerSuccess,
          savePlayerFailure} from '../actions/player-actions';
+
+import { clearErrors} from '../actions/error-actions';
+
+         
 import $ from 'jQuery';
 
 /**
@@ -49,27 +53,18 @@ export function removeStoreFromPlayer(playerId,shopId){
     alert( "error" );
   })
 }
-/**
- * Search users
- */
 
-// export function searchUsers(query = '') {
-//   return ?.get('http://localhost:3001/users?q='+ query)
-//     .then(response => {
-//       store.dispatch(getUsersSuccess(response.data));
-//       return response;
-//     });
-// }
 
-/**
- * Delete a user
- */
  export function savePlayer(newPlayer){
       
      return $.post('http://localhost:8081/users',newPlayer)
-      .done(response=>{store.dispatch(savePlayerSuccess(newPlayer));
+      .done(response=>{
+        store.dispatch(savePlayerSuccess(newPlayer));
         return true;})
-      .fail(error=>{store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
+      .fail(error=>{
+      store.dispatch(clearErrors());
+
+      store.dispatch(savePlayerFailure(error.responseJSON));  //on a fail just pass the errors, not the whole error
         return false;});
      //if there is an error update an error state in flux, the form will detect it in props and show the result
     
@@ -108,12 +103,6 @@ export function getProfile(userId) {
     console.log(reason);
   });
 
-  // return $.get('http://localhost:8081/users/' + userId)
-  //   .then(response => {
-  //       let user = JSON.parse(response);
-  //       store.dispatch(playerProfileSuccess(user));
-
-  //       return;
 
   //     });
 

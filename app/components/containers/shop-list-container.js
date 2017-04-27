@@ -23,6 +23,7 @@ export class ShopListContainer extends React.Component {
 const mapStateToProps = function(store) {
 	return {
   	shops: store.shopState.shops,
+
   	searchResults :store.searchState.searchResults
 
 

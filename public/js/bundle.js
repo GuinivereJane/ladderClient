@@ -66,7 +66,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(326).polyfill();
+	__webpack_require__(329).polyfill();
 	
 	// Notice that we've organized all of our routes into a separate file.
 	
@@ -22131,12 +22131,20 @@
 	
 	var jwtDecode = __webpack_require__(202);
 	
+	var playerId = -1;
+	console.log("token-" + localStorage.getItem('token'));
+	if (localStorage.getItem('token') != null) {
+	  console.log('next step');
+	  playerId = jwtDecode(localStorage.getItem('token')).id; //if there is a loged in player, make sure they are in the stat
+	}
+	console.log(playerId);
+	
 	var initialState = {
 	  players: [],
 	  playerProfile: {
 	    repos: []
 	  },
-	  playerId: "" //jwtDecode(localStorage.getItem('token')).id  //if there is a loged in player, make sure they are in the stat
+	  playerId: playerId
 	};
 	
 	var playerReducer = function playerReducer() {
@@ -22150,10 +22158,11 @@
 	      return Object.assign({}, state, { players: action.players });
 	
 	    case types.LOGIN_SUCCESS:
-	      return Object.assign({}, state, { playerId: action.playerId });
+	      console.log('success!!');
+	      return _extends({}, state, { playerId: action.playerId });
 	
 	    case types.LOGOUT_SUCCESS:
-	      return Object.assign({}, state, { playerId: "" });
+	      return _extends({}, state, { playerId: action.playerId });
 	
 	    case types.DELETE_PLAYER_SUCCESS:
 	      // Use lodash to create a new player array without the player we want to remove
@@ -22208,8 +22217,9 @@
 	
 	//Errors
 	var POST_ERROR = exports.POST_ERROR = 'POST_ERROR';
-	var CLEAR_ERROR = exports.CLEAR_ERROR = 'CLEAR_ERROR'; //ensures that the error state is reset after successfully completing an action
-	
+	var CLEAR_ERRORS = exports.CLEAR_ERRORS = 'CLEAR_ERRORS'; //ensures that the error state is reset after successfully completing an action
+	var LOGIN_ERROR = exports.LOGIN_ERROR = 'LOGIN_ERROR';
+	var UNAUTH_ERROR = exports.UNAUTH_ERROR = 'UNAUTH_ERROR';
 	
 	var GET_ALLIANCES_SUCCESS = exports.GET_ALLIANCES_SUCCESS = 'GET_ALLIANCES_SUCCESS';
 	
@@ -39559,18 +39569,31 @@
 	  errors: []
 	};
 	
+	//error handle epects an array of errors with Type and Path
 	var errorReducer = function errorReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 	  var action = arguments[1];
 	
 	  switch (action.type) {
+	    case types.CLEAR_ERRORS:
+	      return _extends({}, state, { errors: [] });
 	    case types.POST_ERROR:
 	      return _extends({}, state, { errors: action.errors });
+	    case types.LOGIN_ERROR:
+	      var error = {};
+	      error.type = "Failed Login";
+	      error.path = action.errors[0];
+	      return _extends({}, state, { errors: [error] });
 	  }
 	  return state;
 	};
 	
 	exports.default = errorReducer;
+	
+	// {"message":"no such user found"}
+	
+	
+	// [{"type":"Validation error","path":"firstname"},{"type":"Validation error","path":"lastname"},{"type":"Validation error","path":"email"}]
 
 /***/ },
 /* 208 */
@@ -39720,35 +39743,35 @@
 	
 	var _playerListContainer2 = _interopRequireDefault(_playerListContainer);
 	
-	var _playerProfileContainer = __webpack_require__(304);
+	var _playerProfileContainer = __webpack_require__(306);
 	
 	var _playerProfileContainer2 = _interopRequireDefault(_playerProfileContainer);
 	
-	var _shopProfileContainer = __webpack_require__(308);
+	var _shopProfileContainer = __webpack_require__(310);
 	
 	var _shopProfileContainer2 = _interopRequireDefault(_shopProfileContainer);
 	
-	var _newGameContainer = __webpack_require__(310);
+	var _newGameContainer = __webpack_require__(312);
 	
 	var _newGameContainer2 = _interopRequireDefault(_newGameContainer);
 	
-	var _loginFormContainer = __webpack_require__(318);
+	var _loginFormContainer = __webpack_require__(321);
 	
 	var _loginFormContainer2 = _interopRequireDefault(_loginFormContainer);
 	
-	var _playerProfile = __webpack_require__(305);
+	var _playerProfile = __webpack_require__(307);
 	
 	var _playerProfile2 = _interopRequireDefault(_playerProfile);
 	
-	var _shopListContainer = __webpack_require__(322);
+	var _shopListContainer = __webpack_require__(325);
 	
 	var _shopListContainer2 = _interopRequireDefault(_shopListContainer);
 	
-	var _shopList = __webpack_require__(323);
+	var _shopList = __webpack_require__(326);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
-	var _newPlayerContainer = __webpack_require__(324);
+	var _newPlayerContainer = __webpack_require__(327);
 	
 	var _newPlayerContainer2 = _interopRequireDefault(_newPlayerContainer);
 	
@@ -45341,7 +45364,7 @@
 	
 	var _playerList2 = _interopRequireDefault(_playerList);
 	
-	var _playerApi = __webpack_require__(276);
+	var _playerApi = __webpack_require__(277);
 	
 	var playerApi = _interopRequireWildcard(_playerApi);
 	
@@ -45384,10 +45407,11 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				console.log('playerId-containter' + this.props.playerId);
 	
-				return _react2.default.createElement(_playerList2.default, { players: this.props.players,
+				return _react2.default.createElement(_playerList2.default, {
 					playerId: this.props.playerId,
-					searchResults: this.props.searchResults,
+					players: this.props.searchResults,
 					deletePlayer: playerApi.deletePlayer });
 			}
 		}]);
@@ -45425,6 +45449,10 @@
 	
 	var _reactRouter = __webpack_require__(212);
 	
+	var _playerCreate = __webpack_require__(276);
+	
+	var _playerCreate2 = _interopRequireDefault(_playerCreate);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45449,39 +45477,53 @@
 	    //   super(props);
 	    //   this.render = this.render.bind(this);
 	    // }
-	
 	    value: function list() {
 	      var _this2 = this;
 	
-	      var list = this.props.searchResults.map(function (player) {
-	        if (_this2.props.playerId === player.id) {
-	          return _react2.default.createElement(
-	            'li',
-	            { key: player.id },
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/players/' + player.id },
+	      var list = _react2.default.createElement('div', null);
+	      if (this.props.players) {
+	        list = this.props.players.map(function (player) {
+	          if (_this2.props.playerId > 0) {
+	            if (_this2.props.playerId === player.id) {
+	              return _react2.default.createElement(
+	                'li',
+	                { key: player.id },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { to: '/players/' + player.id },
+	                  player.firstname
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { onClick: _this2.props.deletePlayer.bind(null, player.id), className: 'button' },
+	                  'Delete'
+	                )
+	              );
+	            } else {
+	              return _react2.default.createElement(
+	                'li',
+	                { key: player.id },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { to: '/players/' + player.id },
+	                  player.firstname
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'button' },
+	                  'Challange'
+	                )
+	              );
+	            }
+	          } else {
+	            return _react2.default.createElement(
+	              'li',
+	              { key: player.id },
 	              player.firstname
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { onClick: _this2.props.deletePlayer.bind(null, player.id), className: 'button' },
-	              'Delete'
-	            )
-	          );
-	        } else {
-	          return _react2.default.createElement(
-	            'li',
-	            { key: player.id },
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/players/' + player.id },
-	              player.firstname
-	            )
-	          );
-	        }
-	      });
-	      console.log('here');
+	            );
+	          }
+	        });
+	      }
 	      return list;
 	    }
 	  }, {
@@ -45496,11 +45538,7 @@
 	          { className: 'player-list' },
 	          this.list()
 	        ),
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/players/new' },
-	          'Create a new profile'
-	        )
+	        this.props.playerId > 0 ? _react2.default.createElement(_playerCreate2.default, null) : ""
 	      );
 	    }
 	  }]);
@@ -45521,6 +45559,63 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.PlayerCreate = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(212);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PlayerCreate = exports.PlayerCreate = function (_React$Component) {
+	  _inherits(PlayerCreate, _React$Component);
+	
+	  function PlayerCreate() {
+	    _classCallCheck(this, PlayerCreate);
+	
+	    return _possibleConstructorReturn(this, (PlayerCreate.__proto__ || Object.getPrototypeOf(PlayerCreate)).apply(this, arguments));
+	  }
+	
+	  _createClass(PlayerCreate, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/players/new' },
+	          'Create a new Player Profile'
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return PlayerCreate;
+	}(_react2.default.Component);
+	
+	;
+	exports.default = PlayerCreate;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.getPlayers = getPlayers;
 	exports.assocStoreToPlayer = assocStoreToPlayer;
 	exports.removeStoreFromPlayer = removeStoreFromPlayer;
@@ -45528,7 +45623,7 @@
 	exports.deletePlayer = deletePlayer;
 	exports.getProfile = getProfile;
 	
-	var _axios = __webpack_require__(277);
+	var _axios = __webpack_require__(278);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
@@ -45536,9 +45631,11 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _playerActions = __webpack_require__(302);
+	var _playerActions = __webpack_require__(303);
 	
-	var _jQuery = __webpack_require__(303);
+	var _errorActions = __webpack_require__(304);
+	
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -45582,27 +45679,15 @@
 	    alert("error");
 	  });
 	}
-	/**
-	 * Search users
-	 */
 	
-	// export function searchUsers(query = '') {
-	//   return ?.get('http://localhost:3001/users?q='+ query)
-	//     .then(response => {
-	//       store.dispatch(getUsersSuccess(response.data));
-	//       return response;
-	//     });
-	// }
-	
-	/**
-	 * Delete a user
-	 */
 	function savePlayer(newPlayer) {
 	
 	  return _jQuery2.default.post('http://localhost:8081/users', newPlayer).done(function (response) {
 	    _store2.default.dispatch((0, _playerActions.savePlayerSuccess)(newPlayer));
 	    return true;
 	  }).fail(function (error) {
+	    _store2.default.dispatch((0, _errorActions.clearErrors)());
+	
 	    _store2.default.dispatch((0, _playerActions.savePlayerFailure)(error.responseJSON)); //on a fail just pass the errors, not the whole error
 	    return false;
 	  });
@@ -45641,32 +45726,25 @@
 	    console.log(reason);
 	  });
 	
-	  // return $.get('http://localhost:8081/users/' + userId)
-	  //   .then(response => {
-	  //       let user = JSON.parse(response);
-	  //       store.dispatch(playerProfileSuccess(user));
-	
-	  //       return;
-	
 	  //     });
 	}
-
-/***/ },
-/* 277 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(278);
 
 /***/ },
 /* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(279);
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
-	var utils = __webpack_require__(279);
-	var bind = __webpack_require__(280);
-	var Axios = __webpack_require__(281);
-	var defaults = __webpack_require__(282);
+	var utils = __webpack_require__(280);
+	var bind = __webpack_require__(281);
+	var Axios = __webpack_require__(282);
+	var defaults = __webpack_require__(283);
 	
 	/**
 	 * Create an instance of Axios
@@ -45699,15 +45777,15 @@
 	};
 	
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(299);
-	axios.CancelToken = __webpack_require__(300);
-	axios.isCancel = __webpack_require__(296);
+	axios.Cancel = __webpack_require__(300);
+	axios.CancelToken = __webpack_require__(301);
+	axios.isCancel = __webpack_require__(297);
 	
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(301);
+	axios.spread = __webpack_require__(302);
 	
 	module.exports = axios;
 	
@@ -45716,12 +45794,12 @@
 
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var bind = __webpack_require__(280);
+	var bind = __webpack_require__(281);
 	
 	/*global toString:true*/
 	
@@ -46021,7 +46099,7 @@
 
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46038,17 +46116,17 @@
 
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(282);
-	var utils = __webpack_require__(279);
-	var InterceptorManager = __webpack_require__(293);
-	var dispatchRequest = __webpack_require__(294);
-	var isAbsoluteURL = __webpack_require__(297);
-	var combineURLs = __webpack_require__(298);
+	var defaults = __webpack_require__(283);
+	var utils = __webpack_require__(280);
+	var InterceptorManager = __webpack_require__(294);
+	var dispatchRequest = __webpack_require__(295);
+	var isAbsoluteURL = __webpack_require__(298);
+	var combineURLs = __webpack_require__(299);
 	
 	/**
 	 * Create a new instance of Axios
@@ -46129,13 +46207,13 @@
 
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(279);
-	var normalizeHeaderName = __webpack_require__(283);
+	var utils = __webpack_require__(280);
+	var normalizeHeaderName = __webpack_require__(284);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -46152,10 +46230,10 @@
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(284);
+	    adapter = __webpack_require__(285);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(284);
+	    adapter = __webpack_require__(285);
 	  }
 	  return adapter;
 	}
@@ -46229,12 +46307,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -46247,18 +46325,18 @@
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(279);
-	var settle = __webpack_require__(285);
-	var buildURL = __webpack_require__(288);
-	var parseHeaders = __webpack_require__(289);
-	var isURLSameOrigin = __webpack_require__(290);
-	var createError = __webpack_require__(286);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(291);
+	var utils = __webpack_require__(280);
+	var settle = __webpack_require__(286);
+	var buildURL = __webpack_require__(289);
+	var parseHeaders = __webpack_require__(290);
+	var isURLSameOrigin = __webpack_require__(291);
+	var createError = __webpack_require__(287);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(292);
 	
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -46354,7 +46432,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(292);
+	      var cookies = __webpack_require__(293);
 	
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -46431,12 +46509,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createError = __webpack_require__(286);
+	var createError = __webpack_require__(287);
 	
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -46462,12 +46540,12 @@
 
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var enhanceError = __webpack_require__(287);
+	var enhanceError = __webpack_require__(288);
 	
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -46485,7 +46563,7 @@
 
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46510,12 +46588,12 @@
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -46584,12 +46662,12 @@
 
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	/**
 	 * Parse headers into an object
@@ -46627,12 +46705,12 @@
 
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -46701,7 +46779,7 @@
 
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46743,12 +46821,12 @@
 
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -46802,12 +46880,12 @@
 
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -46860,15 +46938,15 @@
 
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
-	var transformData = __webpack_require__(295);
-	var isCancel = __webpack_require__(296);
-	var defaults = __webpack_require__(282);
+	var utils = __webpack_require__(280);
+	var transformData = __webpack_require__(296);
+	var isCancel = __webpack_require__(297);
+	var defaults = __webpack_require__(283);
 	
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -46945,12 +47023,12 @@
 
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(279);
+	var utils = __webpack_require__(280);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -46971,7 +47049,7 @@
 
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46982,7 +47060,7 @@
 
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47002,7 +47080,7 @@
 
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47020,7 +47098,7 @@
 
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47045,12 +47123,12 @@
 
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Cancel = __webpack_require__(299);
+	var Cancel = __webpack_require__(300);
 	
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -47108,7 +47186,7 @@
 
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47141,7 +47219,7 @@
 
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47151,6 +47229,7 @@
 	});
 	exports.loginSuccess = loginSuccess;
 	exports.playerError = playerError;
+	exports.loginError = loginError;
 	exports.logoutSuccess = logoutSuccess;
 	exports.getPlayersSuccess = getPlayersSuccess;
 	exports.savePlayerSuccess = savePlayerSuccess;
@@ -47167,9 +47246,10 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function loginSuccess(playerId) {
+	  var errors = []; //to clear erroro object if there was a failed attempt
 	  return {
 	    type: types.LOGIN_SUCCESS,
-	    playerId: playerId
+	    playerId: playerId, errors: errors
 	  };
 	}
 	
@@ -47177,6 +47257,14 @@
 	  var errors = [error]; //put singular error into an arrary for the error handler
 	  return {
 	    type: types.POST_ERROR,
+	    errors: errors
+	  };
+	}
+	
+	function loginError(error) {
+	  var errors = [error]; //put singular error into an arrary for the error handler
+	  return {
+	    type: types.LOGIN_ERROR,
 	    errors: errors
 	  };
 	}
@@ -47236,7 +47324,41 @@
 	}
 
 /***/ },
-/* 303 */
+/* 304 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.unauthorizedError = unauthorizedError;
+	exports.clearErrors = clearErrors;
+	
+	var _actionTypes = __webpack_require__(200);
+	
+	var types = _interopRequireWildcard(_actionTypes);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function unauthorizedError() {
+	  var errors = [{ type: 'unauthorized' }];
+	  return {
+	    type: types.POST_ERROR,
+	    errors: errors
+	  };
+	}
+	
+	function clearErrors() {
+	  var errors = [];
+	  return {
+	    type: types.CLEAR_ERRORS,
+	    errors: errors
+	  };
+	}
+
+/***/ },
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -57495,7 +57617,7 @@
 
 
 /***/ },
-/* 304 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57513,15 +57635,15 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _playerProfile = __webpack_require__(305);
+	var _playerProfile = __webpack_require__(307);
 	
 	var _playerProfile2 = _interopRequireDefault(_playerProfile);
 	
-	var _playerApi = __webpack_require__(276);
+	var _playerApi = __webpack_require__(277);
 	
 	var playerApi = _interopRequireWildcard(_playerApi);
 	
-	var _shopApi = __webpack_require__(306);
+	var _shopApi = __webpack_require__(308);
 	
 	var shopApi = _interopRequireWildcard(_shopApi);
 	
@@ -57582,7 +57704,9 @@
 			key: 'render',
 			value: function render() {
 	
-				return _react2.default.createElement(_playerProfile2.default, { profile: this.props.playerProfile, shops: this.props.shops,
+				return _react2.default.createElement(_playerProfile2.default, { profile: this.props.playerProfile,
+					shops: this.props.shops,
+					playerId: this.props.playerId,
 					joinStore: this.joinStore,
 					leaveStore: this.leaveStore });
 			}
@@ -57594,6 +57718,8 @@
 	var mapStateToProps = function mapStateToProps(store) {
 		return {
 			playerProfile: store.playerState.playerProfile,
+			playerId: store.playerState.playerId,
+	
 			shops: store.shopState.shops
 		};
 	};
@@ -57601,13 +57727,13 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(PlayerProfileContainer);
 
 /***/ },
-/* 305 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-			value: true
+		value: true
 	});
 	exports.PlayerProfile = undefined;
 	
@@ -57629,115 +57755,101 @@
 	
 	// .bind(null,this.props.profile.id,shop.id)
 	var PlayerProfile = exports.PlayerProfile = function (_React$Component) {
-			_inherits(PlayerProfile, _React$Component);
+		_inherits(PlayerProfile, _React$Component);
 	
-			function PlayerProfile() {
-					_classCallCheck(this, PlayerProfile);
+		function PlayerProfile() {
+			_classCallCheck(this, PlayerProfile);
 	
-					return _possibleConstructorReturn(this, (PlayerProfile.__proto__ || Object.getPrototypeOf(PlayerProfile)).apply(this, arguments));
-			}
+			return _possibleConstructorReturn(this, (PlayerProfile.__proto__ || Object.getPrototypeOf(PlayerProfile)).apply(this, arguments));
+		}
 	
-			_createClass(PlayerProfile, [{
-					key: 'render',
-					value: function render() {
-							var _this2 = this;
+		_createClass(PlayerProfile, [{
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
 	
-							var joinButtons = this.props.shops.map(function (shop) {
-									return _react2.default.createElement(
-											'div',
-											{ className: 'button', onClick: _this2.props.joinStore, id: shop.id, key: shop.id },
-											shop.name
-									);;
-							});
+				var joinButtons = this.props.shops.map(function (shop) {
+					return _react2.default.createElement(
+						'div',
+						{ className: 'button', onClick: _this2.props.joinStore, id: shop.id, key: shop.id },
+						shop.name
+					);;
+				});
 	
-							var shop = _react2.default.createElement(
-									'li',
-									null,
-									'Store: Click to Join (',
-									joinButtons,
-									')'
-							);
+				var profile = _react2.default.createElement('div', null);
+				if (this.props.playerId > 0) {
+					//check if we are logged in
 	
-							if (this.props.profile.shop) {
-									shop = _react2.default.createElement(
-											'li',
-											null,
-											'Store',
-											_react2.default.createElement(
-													'ul',
-													null,
-													_react2.default.createElement(
-															'li',
-															null,
-															'Name: ',
-															this.props.profile.shop.name
-													),
-													_react2.default.createElement(
-															'li',
-															null,
-															'Address: ',
-															this.props.profile.shop.address
-													),
-													_react2.default.createElement(
-															'li',
-															null,
-															'Email: ',
-															this.props.profile.shop.email
-													),
-													_react2.default.createElement(
-															'li',
-															null,
-															'Phone: ',
-															this.props.profile.shop.phonenumnber
-													)
-											),
-											_react2.default.createElement(
-													'div',
-													{ className: 'button', onClick: this.props.leaveStore,
-															id: this.props.profile.shop.id },
-													'Remove Store'
-											)
-									);
-							}
-	
-							return _react2.default.createElement(
-									'div',
-									{ className: 'player-profile' },
-									_react2.default.createElement(
-											'ul',
-											null,
-											_react2.default.createElement(
-													'li',
-													null,
-													'Name: ',
-													this.props.profile.firstname,
-													' ',
-													this.props.profile.lastname
-											),
-											_react2.default.createElement(
-													'li',
-													null,
-													'Email: ',
-													this.props.profile.email
-											),
-											_react2.default.createElement(
-													'li',
-													null,
-													'Phone: ',
-													this.props.profile.phonenumber
-											),
-											shop
-									),
-									_react2.default.createElement(
-											_reactRouter.Link,
-											{ to: '/players' },
-											'Back to list'
-									)
-							);
+					var shop = _react2.default.createElement(
+						'li',
+						null,
+						'Store: Click to Join (',
+						joinButtons,
+						')'
+					);
+					if (this.props.profile.shop && this.props.playerId == this.props.profile.id) {
+						shop = _react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'div',
+								{ className: 'button', onClick: this.props.leaveStore,
+									id: this.props.profile.shop.id },
+								'Leave ',
+								this.props.profile.shop.name
+							)
+						);
+					} else if (this.props.profile.shop) {
+						shop = _react2.default.createElement(
+							'li',
+							null,
+							'Shop: ',
+							this.props.profile.shop.name
+						);
 					}
-			}]);
 	
-			return PlayerProfile;
+					profile = _react2.default.createElement(
+						'ul',
+						null,
+						_react2.default.createElement(
+							'li',
+							null,
+							'Name: ',
+							this.props.profile.firstname,
+							' ',
+							this.props.profile.lastname
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							'Email: ',
+							this.props.profile.email
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							'Phone: ',
+							this.props.profile.phonenumber
+						),
+						shop
+					);
+				}
+				console.log(profile);
+	
+				return _react2.default.createElement(
+					'div',
+					{ className: 'player-profile' },
+					profile,
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/players' },
+						'Back to list'
+					)
+				);
+			}
+		}]);
+	
+		return PlayerProfile;
 	}(_react2.default.Component);
 	
 	;
@@ -57745,7 +57857,7 @@
 	exports.default = PlayerProfile;
 
 /***/ },
-/* 306 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57756,7 +57868,7 @@
 	exports.getShops = getShops;
 	exports.getProfile = getProfile;
 	
-	var _axios = __webpack_require__(277);
+	var _axios = __webpack_require__(278);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
@@ -57764,9 +57876,9 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _shopActions = __webpack_require__(307);
+	var _shopActions = __webpack_require__(309);
 	
-	var _jQuery = __webpack_require__(303);
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -57804,7 +57916,7 @@
 	}
 
 /***/ },
-/* 307 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57844,7 +57956,7 @@
 	}
 
 /***/ },
-/* 308 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57862,11 +57974,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _shopProfile = __webpack_require__(309);
+	var _shopProfile = __webpack_require__(311);
 	
 	var _shopProfile2 = _interopRequireDefault(_shopProfile);
 	
-	var _shopApi = __webpack_require__(306);
+	var _shopApi = __webpack_require__(308);
 	
 	var shopApi = _interopRequireWildcard(_shopApi);
 	
@@ -57906,7 +58018,7 @@
 			key: 'render',
 			value: function render() {
 	
-				return _react2.default.createElement(_shopProfile2.default, { shopProfile: this.props.shopProfile });
+				return _react2.default.createElement(_shopProfile2.default, { shopProfile: this.props.shopProfile, playerId: this.props.playerId });
 			}
 		}]);
 	
@@ -57915,14 +58027,16 @@
 	
 	var mapStateToProps = function mapStateToProps(store) {
 		return {
-			shopProfile: store.shopState.shopProfile
+			shopProfile: store.shopState.shopProfile,
+			playerId: store.playerState.playerId
+	
 		};
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(ShopProfileContainer);
 
 /***/ },
-/* 309 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57939,6 +58053,16 @@
 	var _react2 = _interopRequireDefault(_react);
 	
 	var _reactRouter = __webpack_require__(212);
+	
+	var _playerList = __webpack_require__(275);
+	
+	var _playerList2 = _interopRequireDefault(_playerList);
+	
+	var _playerApi = __webpack_require__(277);
+	
+	var playerApi = _interopRequireWildcard(_playerApi);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -58037,7 +58161,14 @@
 	            'Address: ',
 	            this.props.shopProfile.address
 	          ),
-	          players
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Players:',
+	            _react2.default.createElement(_playerList2.default, { players: this.props.shopProfile.players,
+	              deletePlayer: playerApi.deletePlayer,
+	              playerId: this.props.playerId })
+	          )
 	        ),
 	        _react2.default.createElement(
 	          _reactRouter.Link,
@@ -58056,7 +58187,7 @@
 	exports.default = ShopProfile;
 
 /***/ },
-/* 310 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58074,11 +58205,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _gameForm = __webpack_require__(311);
+	var _gameForm = __webpack_require__(313);
 	
 	var _gameForm2 = _interopRequireDefault(_gameForm);
 	
-	var _gameApi = __webpack_require__(312);
+	var _gameApi = __webpack_require__(315);
 	
 	var gameApi = _interopRequireWildcard(_gameApi);
 	
@@ -58088,15 +58219,15 @@
 	
 	var _searchLayoutActions = __webpack_require__(273);
 	
-	var _playerApi = __webpack_require__(276);
+	var _playerApi = __webpack_require__(277);
 	
 	var playerApi = _interopRequireWildcard(_playerApi);
 	
-	var _allianceApi = __webpack_require__(314);
+	var _allianceApi = __webpack_require__(317);
 	
 	var allianceApi = _interopRequireWildcard(_allianceApi);
 	
-	var _factionApi = __webpack_require__(316);
+	var _factionApi = __webpack_require__(319);
 	
 	var factionApi = _interopRequireWildcard(_factionApi);
 	
@@ -58204,7 +58335,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(NewGameContainer);
 
 /***/ },
-/* 311 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58219,6 +58350,8 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _errorMessage = __webpack_require__(314);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -58238,35 +58371,6 @@
 	  }
 	
 	  _createClass(GameForm, [{
-	    key: 'errorMessage',
-	
-	    // constructor(props) {
-	    //   super(props);
-	    //   this.render = this.render.bind(this);
-	    // }
-	
-	    value: function errorMessage(errors) {
-	      if (errors.length > 0) {
-	
-	        var errorList = errors.map(function (error) {
-	          return _react2.default.createElement(
-	            'div',
-	            { key: error.path, classNamne: 'error' },
-	            error.type,
-	            ' : ',
-	            error.path
-	          );
-	        });
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'error-list' },
-	          errorList
-	        );
-	      } else {
-	        return _react2.default.createElement('div', null);
-	      }
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var loserList = _react2.default.createElement(
@@ -58280,7 +58384,12 @@
 	        this.props.factionOptions
 	      );
 	
-	      var errors = this.errorMessage(this.props.errors);
+	      var errors = _react2.default.createElement('div', null);
+	      if (this.props.errors) {
+	        var errorHelper = new _errorMessage.Errors(this.props.errors);
+	        errors = errorHelper.errorMessage();
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'post-form' },
@@ -58365,7 +58474,70 @@
 	exports.default = GameForm;
 
 /***/ },
-/* 312 */
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.Errors = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Errors = exports.Errors = function () {
+		function Errors(e) {
+			_classCallCheck(this, Errors);
+	
+			this.errors = e;
+		}
+	
+		_createClass(Errors, [{
+			key: 'errorMessage',
+			value: function errorMessage() {
+				if (this.errors.length > 0) {
+					if (this.errors[0].type == "unauthorized") {
+						return _react2.default.createElement(
+							'div',
+							{ classNamne: 'error' },
+							'You need to log in to preform that action'
+						);
+					} else {
+						var errorList = this.errors.map(function (error) {
+							return _react2.default.createElement(
+								'div',
+								{ key: error.path, classNamne: 'error' },
+								error.type,
+								' : ',
+								error.path
+							);
+						});
+						return _react2.default.createElement(
+							'div',
+							{ className: 'error-list' },
+							errorList
+						);
+					}
+				} else {
+					return _react2.default.createElement('div', null);
+				}
+			}
+		}]);
+
+		return Errors;
+	}();
+
+/***/ },
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58379,9 +58551,11 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _gameActions = __webpack_require__(313);
+	var _gameActions = __webpack_require__(316);
 	
-	var _jQuery = __webpack_require__(303);
+	var _errorActions = __webpack_require__(304);
+	
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -58392,7 +58566,11 @@
 	    _store2.default.dispatch((0, _gameActions.saveGameSuccess)(data));
 	    return true;
 	  }).fail(function (error) {
-	    _store2.default.dispatch((0, _gameActions.saveGameFailure)(error.responseJSON));
+	    if (error.status == 401) {
+	      _store2.default.dispatch((0, _errorActions.unauthorizedError)());
+	    } else {
+	      _store2.default.dispatch((0, _gameActions.saveGameFailure)(error.responseJSON));
+	    }
 	    return false;
 	  });
 	}
@@ -58409,7 +58587,7 @@
 	// }
 
 /***/ },
-/* 313 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58441,7 +58619,7 @@
 	}
 
 /***/ },
-/* 314 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58451,7 +58629,7 @@
 	});
 	exports.getAlliances = getAlliances;
 	
-	var _axios = __webpack_require__(277);
+	var _axios = __webpack_require__(278);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
@@ -58459,9 +58637,9 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _allianceActions = __webpack_require__(315);
+	var _allianceActions = __webpack_require__(318);
 	
-	var _jQuery = __webpack_require__(303);
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -58479,7 +58657,7 @@
 	}
 
 /***/ },
-/* 315 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58503,7 +58681,7 @@
 	}
 
 /***/ },
-/* 316 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58513,7 +58691,7 @@
 	});
 	exports.getFactions = getFactions;
 	
-	var _axios = __webpack_require__(277);
+	var _axios = __webpack_require__(278);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
@@ -58521,9 +58699,9 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _factionActions = __webpack_require__(317);
+	var _factionActions = __webpack_require__(320);
 	
-	var _jQuery = __webpack_require__(303);
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -58541,7 +58719,7 @@
 	}
 
 /***/ },
-/* 317 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58565,7 +58743,7 @@
 	}
 
 /***/ },
-/* 318 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58577,11 +58755,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _errorApi = __webpack_require__(319);
+	var _errorApi = __webpack_require__(322);
 	
 	var errorApi = _interopRequireWildcard(_errorApi);
 	
-	var _loginForm = __webpack_require__(320);
+	var _loginForm = __webpack_require__(323);
 	
 	var _loginForm2 = _interopRequireDefault(_loginForm);
 	
@@ -58591,9 +58769,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _loginApi = __webpack_require__(321);
+	var _loginApi = __webpack_require__(324);
 	
 	var loginApi = _interopRequireWildcard(_loginApi);
+	
+	var _reactRouter = __webpack_require__(212);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -58660,7 +58840,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(LoginContainer);
 
 /***/ },
-/* 319 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58677,6 +58857,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function errorMessage(errors) {
+	
 	  if (errors.length > 0) {
 	    var errorList = errors.map(function (error) {
 	      return _react2.default.createElement(
@@ -58702,7 +58883,7 @@
 	//  }
 
 /***/ },
-/* 320 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58717,6 +58898,8 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _errorMessage = __webpack_require__(314);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -58746,10 +58929,16 @@
 	
 	    value: function render() {
 	
+	      var errors = _react2.default.createElement('div', null);
+	      if (this.props.errors) {
+	        var errorHelper = new _errorMessage.Errors(this.props.errors);
+	        errors = errorHelper.errorMessage();
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'post-form' },
-	        this.props.errors,
+	        errors,
 	        _react2.default.createElement(
 	          'form',
 	          { onSubmit: this.props.onLogin, method: 'POST' },
@@ -58797,7 +58986,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 321 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58813,9 +59002,11 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _playerActions = __webpack_require__(302);
+	var _playerActions = __webpack_require__(303);
 	
-	var _jQuery = __webpack_require__(303);
+	var _errorActions = __webpack_require__(304);
+	
+	var _jQuery = __webpack_require__(305);
 	
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 	
@@ -58829,20 +59020,20 @@
 	  var data = { password: password, email: email };
 	  _jQuery2.default.post('http://localhost:8081/login', data).done(function (response) {
 	    localStorage.setItem('token', response.token);
-	    _store2.default.dispatch(loginSuccess(jwtDecode(localStorage.getItem('token')).id));
+	    // store.dispatch(clearErrors());
+	    _store2.default.dispatch((0, _playerActions.loginSuccess)(jwtDecode(localStorage.getItem('token')).id));
 	    return response;
 	  }).fail(function (error) {
 	    //massage error for error handleer
-	    console.log(error.responseJSON);
 	    //let err = [{type:}]
-	    _store2.default.dispatch((0, _playerActions.playerError)(error.responseJSON)); //on a fail just pass the errors, not the whole error
+	    _store2.default.dispatch((0, _playerActions.loginError)(error.statusText)); //on a fail just pass the errors, not the whole error
 	    return false;
 	  });
 	}
 	
 	function logout() {
 	  localStorage.removeItem('token');
-	  _store2.default.dispatch(logoutSuccess("-1"));
+	  _store2.default.dispatch((0, _playerActions.logoutSuccess)("-1"));
 	}
 	
 	function secret() {
@@ -58852,13 +59043,11 @@
 	    headers: { "Authorization": 'JWT ' + localStorage.getItem('token') }
 	  }).done(function (response) {
 	    console.log(response);
-	  }).fail(function (err) {
-	    console.log(err);
-	  });
+	  }).fail(function (err) {});
 	}
 
 /***/ },
-/* 322 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58876,11 +59065,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _shopList = __webpack_require__(323);
+	var _shopList = __webpack_require__(326);
 	
 	var _shopList2 = _interopRequireDefault(_shopList);
 	
-	var _shopApi = __webpack_require__(306);
+	var _shopApi = __webpack_require__(308);
 	
 	var shopApi = _interopRequireWildcard(_shopApi);
 	
@@ -58932,6 +59121,7 @@
 	var mapStateToProps = function mapStateToProps(store) {
 		return {
 			shops: store.shopState.shops,
+	
 			searchResults: store.searchState.searchResults
 	
 		};
@@ -58940,7 +59130,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(ShopListContainer);
 
 /***/ },
-/* 323 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59004,7 +59194,7 @@
 	exports.default = ShopList;
 
 /***/ },
-/* 324 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59022,11 +59212,11 @@
 	
 	var _reactRedux = __webpack_require__(159);
 	
-	var _playerForm = __webpack_require__(325);
+	var _playerForm = __webpack_require__(328);
 	
 	var _playerForm2 = _interopRequireDefault(_playerForm);
 	
-	var _playerApi = __webpack_require__(276);
+	var _playerApi = __webpack_require__(277);
 	
 	var playerApi = _interopRequireWildcard(_playerApi);
 	
@@ -59102,7 +59292,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(NewPlayerContainer);
 
 /***/ },
-/* 325 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59117,6 +59307,8 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _errorMessage = __webpack_require__(314);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -59136,41 +59328,13 @@
 	  }
 	
 	  _createClass(PlayerForm, [{
-	    key: 'errorMessage',
-	
-	    // constructor(props) {
-	    //   super(props);
-	    //   this.render = this.render.bind(this);
-	    // }
-	
-	
-	    value: function errorMessage(errors) {
-	      if (errors.length > 0) {
-	
-	        var errorList = this.props.errors.map(function (error) {
-	          return _react2.default.createElement(
-	            'div',
-	            { classNamne: 'error' },
-	            error.type,
-	            ' : ',
-	            error.path
-	          );
-	        });
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'error-list' },
-	          errorList
-	        );
-	      } else {
-	        return _react2.default.createElement('div', null);
-	      }
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
+	
 	      var errors = _react2.default.createElement('div', null);
 	      if (this.props.errors) {
-	        var _errors = this.errorMessage(this.props.errors);
+	        var errorHelper = new _errorMessage.Errors(this.props.errors);
+	        errors = errorHelper.errorMessage();
 	      }
 	
 	      return _react2.default.createElement(
@@ -59234,7 +59398,7 @@
 	exports.default = PlayerForm;
 
 /***/ },
-/* 326 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/* WEBPACK VAR INJECTION */(function(process, global) {/*!
@@ -59369,7 +59533,7 @@
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(327);
+	    var vertx = __webpack_require__(330);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -60394,7 +60558,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), (function() { return this; }())))
 
 /***/ },
-/* 327 */
+/* 330 */
 /***/ function(module, exports) {
 
 	/* (ignored) */

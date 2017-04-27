@@ -8,31 +8,33 @@ export class PlayerProfile extends React.Component {
   		return (<div className="button" onClick={this.props.joinStore} id={shop.id} key={shop.id}>{shop.name}</div>);;
   	});
 
-  	let shop = (<li>Store: Click to Join ({joinButtons})</li>);
+  	let profile = <div/>
+  	if (this.props.playerId > 0){  //check if we are logged in
 
-  	if (this.props.profile.shop){
-  		shop=(<li>Store
-  						<ul>
-								<li>Name: {this.props.profile.shop.name}</li>
-								<li>Address: {this.props.profile.shop.address}</li>
-								<li>Email: {this.props.profile.shop.email}</li>
-								<li>Phone: {this.props.profile.shop.phonenumnber}</li>
-							</ul>
-							<div className="button" onClick={this.props.leaveStore} 
-																			id={this.props.profile.shop.id}>
-								Remove Store
-							</div>
+  		let shop = (<li>Store: Click to Join ({joinButtons})</li>);
+	  	if (this.props.profile.shop  && this.props.playerId == this.props.profile.id){
+	  		shop =(<li>
+		  						<div className="button" onClick={this.props.leaveStore} 
+																					id={this.props.profile.shop.id}>
+										Leave {this.props.profile.shop.name}
+									</div>
+								</li>
+								);
+	  	}else if (this.props.profile.shop){
+	  		shop = (<li>Shop: {this.props.profile.shop.name}</li>)
+	  	}
 
-						</li>)
-  	}
-
-    return (<div className="player-profile">
-	    				<ul>
+  		profile = (<ul>
 	    					<li>Name: {this.props.profile.firstname} {this.props.profile.lastname}</li>
 	    					<li>Email: {this.props.profile.email}</li>
 	    					<li>Phone: {this.props.profile.phonenumber}</li>
 	    					{shop}
-	    				</ul>
+	    				</ul>);
+  	}
+  	console.log(profile)
+
+    return (<div className="player-profile">
+	    				{profile}
 	    				<Link to={'/players'}>Back to list</Link>
     				</div>
     				);

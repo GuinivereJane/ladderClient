@@ -1,32 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router';
+import PlayerCreate from './player-create';
+
 
 export class PlayerList extends React.Component {
   // constructor(props) {
   //   super(props);
   //   this.render = this.render.bind(this);
   // }
-
   list(){
-    let list = this.props.searchResults.map((player)=>{
-      if (this.props.playerId === player.id){
-        return (
-          <li key={player.id}>
-            <Link to={'/players/' + player.id}>{player.firstname}</Link>
-            <div onClick = {this.props.deletePlayer.bind(null, player.id)} className = "button">Delete</div>
-          </li>
-        );
+    let list=<div/>;
+    if(this.props.players){
+     list = this.props.players.map((player)=>{
+      if(this.props.playerId > 0){
+        if (this.props.playerId === player.id){
+          return (
+            <li key={player.id}>
+              <Link to={'/players/' + player.id}>{player.firstname}</Link>
+              <div onClick = {this.props.deletePlayer.bind(null, player.id)} className = "button">Delete</div>
+            </li>
+          );
+        }else{
+          return (
+            <li key={player.id}>
+              <Link to={'/players/' + player.id}>{player.firstname}</Link>
+              <div className ="button">Challange</div>
+            </li>
+          ); 
+        } 
       }else{
         return (
-          <li key={player.id}>
-            <Link to={'/players/' + player.id}>{player.firstname}</Link> 
-          </li>
-        ); 
-      }  
+            <li key={player.id}>
+              {player.firstname}
+              </li>);
+      } 
     });
-    console.log('here');
+    }
     return list;
   }
+
+
   render() {
 
     return (
@@ -34,7 +47,7 @@ export class PlayerList extends React.Component {
       <ul className = "player-list">
        {this.list()}
       </ul>
-      <Link to="/players/new">Create a new profile</Link>
+      {this.props.playerId  > 0? <PlayerCreate/> : }
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import store from '../store';
 import {saveGameSuccess,
 				saveGameFailure} from '../actions/game-actions';
+import {unauthorizedError} from '../actions/error-actions';
 import $ from 'jQuery';
 
 export function saveGame(data){
@@ -8,7 +9,11 @@ export function saveGame(data){
       .then(response =>{store.dispatch(saveGameSuccess(data));
         return true;})
       .fail((error)=>{
-      	store.dispatch(saveGameFailure(error.responseJSON));
+      	if (error.status == 401){
+      		store.dispatch(unauthorizedError());
+      	}else{
+      		store.dispatch(saveGameFailure(error.responseJSON));
+      	}
       	return false});
     
  }

@@ -18,7 +18,7 @@ componentDidMount(){
 	render(){
 
 		return (
-				<ShopProfile shopProfile={this.props.shopProfile}/>
+				<ShopProfile shopProfile={this.props.shopProfile} playerId={this.props.playerId}/>
 			);
 	}
 }
@@ -26,6 +26,8 @@ componentDidMount(){
 const mapStateToProps = function(store) {
 	return {
   	shopProfile: store.shopState.shopProfile,
+  	  	playerId: store.playerState.playerId
+
 	};
 };
 

@@ -1,30 +1,19 @@
 import React from 'react';
+import {Errors} from './view-helpers/error-message';
 
 export class GameForm extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.render = this.render.bind(this);
-  // }
 
-  errorMessage(errors){
-    if (errors.length > 0){
 
-      let errorList = errors.map((error)=>{
-        return <div key={error.path} classNamne='error'>{error.type} : {error.path}</div>;
-      });
-      return (<div className = 'error-list'>
-                {errorList}
-              </div>);
-    }else{
-      return <div/>
-    }
-   
-  }
   render() {
     let loserList = (<datalist id="loserOptions">{this.props.loserOptions}</datalist>);
     let factionList = (<datalist id="factionOptions">{this.props.factionOptions}</datalist>);
 
-    let errors = this.errorMessage(this.props.errors);
+    let errors = <div/>;
+    if (this.props.errors){
+      let errorHelper = new Errors(this.props.errors);
+      errors = errorHelper.errorMessage();
+    }
+
     return ( 
       <div className='post-form'>
       {errors}

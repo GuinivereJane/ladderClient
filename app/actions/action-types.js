@@ -9,9 +9,13 @@ export const POST_SAVE_PLAYER_SUCCESS = 'POST_SAVE_PLAYER_SUCCESS';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
+
 //Errors
 export const POST_ERROR = 'POST_ERROR';
-export const CLEAR_ERROR = 'CLEAR_ERROR'; //ensures that the error state is reset after successfully completing an action
+export const CLEAR_ERRORS = 'CLEAR_ERRORS'; //ensures that the error state is reset after successfully completing an action
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const UNAUTH_ERROR = 'UNAUTH_ERROR';
+
 
 
 export const GET_ALLIANCES_SUCCESS = 'GET_ALLIANCES_SUCCESS';

@@ -1,31 +1,16 @@
 import React from 'react';
+import {Errors} from './view-helpers/error-message';
+
 
 export class PlayerForm extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.render = this.render.bind(this);
-  // }
-
-
-  errorMessage(errors){
-    if (errors.length > 0){
-
-      let errorList = this.props.errors.map((error)=>{
-        return <div classNamne='error'>{error.type} : {error.path}</div>;
-      });
-      return (<div className = 'error-list'>
-                {errorList}
-              </div>);
-    }else{
-      return <div/>
-    }
-   
-  }
+  
   render() {
-    let errors = <div></div>;
-    if (this.props.errors){
-      let errors = this.errorMessage(this.props.errors);
+ 
 
+    let errors = <div/>;
+    if (this.props.errors){
+      let errorHelper = new Errors(this.props.errors);
+      errors = errorHelper.errorMessage();
     }
 
     return (

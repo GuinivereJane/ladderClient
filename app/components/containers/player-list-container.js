@@ -19,12 +19,13 @@ export class PlayerListContainer extends React.Component {
 	}
 	
 	
-	render(){
+	render(){		  	console.log('playerId-containter' + this.props.playerId)
+
 
 		return (
-			<PlayerList players={this.props.players}
+			<PlayerList 
 									playerId={this.props.playerId}
-									searchResults={this.props.searchResults}
+									players={this.props.searchResults}
 									deletePlayer={playerApi.deletePlayer}/>
 			);
 	}

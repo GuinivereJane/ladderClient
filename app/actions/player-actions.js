@@ -1,9 +1,10 @@
 import * as types from '../actions/action-types';
 
 export function loginSuccess(playerId) {
+  let errors = [];//to clear erroro object if there was a failed attempt
   return {
     type: types.LOGIN_SUCCESS,
-    playerId
+    playerId,errors
   };
 }
 
@@ -11,6 +12,14 @@ export function playerError(error){
    let errors=[error];  //put singular error into an arrary for the error handler
    return {
     type: types.POST_ERROR,
+    errors
+  };
+ }
+
+export function loginError(error){
+   let errors=[error];  //put singular error into an arrary for the error handler
+   return {
+    type: types.LOGIN_ERROR,
     errors
   };
  }

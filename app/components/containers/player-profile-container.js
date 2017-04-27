@@ -7,7 +7,6 @@ import * as shopApi from '../../api/shop-api';
 import store from '../../store';
 
 
-
 export class PlayerProfileContainer extends React.Component {
 
 	constructor(){
@@ -40,7 +39,9 @@ export class PlayerProfileContainer extends React.Component {
 	render(){
 
 		return (
-				<PlayerProfile profile={this.props.playerProfile} shops={this.props.shops} 
+				<PlayerProfile profile={this.props.playerProfile}
+												 shops={this.props.shops} 
+												 playerId={this.props.playerId}
 												joinStore={this.joinStore}
 												leaveStore={this.leaveStore}/>
 			);
@@ -50,6 +51,8 @@ export class PlayerProfileContainer extends React.Component {
 const mapStateToProps = function(store) {
 	return {
   	playerProfile: store.playerState.playerProfile,
+  	playerId: store.playerState.playerId,
+
   	shops: store.shopState.shops
 	};
 };

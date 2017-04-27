@@ -1,4 +1,5 @@
 import React from 'react';
+import {Errors} from './view-helpers/error-message';
 
 export class LoginForm extends React.Component {
   // constructor(props) {
@@ -8,10 +9,16 @@ export class LoginForm extends React.Component {
 
 
   render() {
+
+     let errors = <div/>;
+    if (this.props.errors){
+      let errorHelper = new Errors(this.props.errors);
+      errors = errorHelper.errorMessage();
+    }
         
     return (
     <div className='post-form'> 
-      {this.props.errors}
+      {errors}
       <form onSubmit={this.props.onLogin}  method="POST">
         
         <div className="input-component">
