@@ -18,7 +18,7 @@ import $ from 'jQuery';
  */
 
 export function getPlayers() {
-  return axios.get('http://localhost:8081/users')
+  return axios.get(`${process.env.url}/users`)
     .then(response => {
       store.dispatch(getPlayersSuccess(response.data));
       return response;
@@ -77,7 +77,13 @@ export function deletePlayer(playerId) {
       return response;
     });
 }
-
+export function challengePlayer(challengerId, challengedId) {
+  return $.get(`http://localhost:8081/challenge/${challengerId}/${challengedId}`)
+    .then(response => {
+      return response;
+    });
+  //console.log(challengerId + "-challenger|" + challengedId + "-challenged")
+}
 // /**
 //  * getProfile() is much more complex because it has to make
 //  * three XHR requests to get all the profile info.

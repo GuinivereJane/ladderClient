@@ -1,12 +1,22 @@
 import store from '../store';
 import {saveGameSuccess,
-				saveGameFailure} from '../actions/game-actions';
+				saveGameFailure,
+        getGamesSuccess} from '../actions/game-actions';
 import {unauthorizedError} from '../actions/error-actions';
 import $ from 'jQuery';
+import { browserHistory } from 'react-router'
+
+
 
 export function saveGame(data){
-      return $.post('http://localhost:8081/games',data)
+			return $.ajax({
+              url: "http://localhost:8081/games",
+              type: 'POST',
+              data: data,
+              headers: {"Authorization": `JWT ${localStorage.getItem('token')}`}
+           })
       .then(response =>{store.dispatch(saveGameSuccess(data));
+
         return true;})
       .fail((error)=>{
       	if (error.status == 401){
@@ -17,6 +27,15 @@ export function saveGame(data){
       	return false});
     
  }
+
+ export function getGamesByUserId(userId) {
+  return $.get(`${process.env.url}/users/${userId}/games`)
+    .then(response => {
+      store.dispatch(getGamesSuccess(JSON.parse(response)));
+      console.log(JSON.parse(response));
+      return response;
+    });
+}
 
  // export function savePlayer(newPlayer){
       

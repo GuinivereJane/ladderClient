@@ -23,15 +23,15 @@ export class PlayerList extends React.Component {
         }else{
           return (
             <li key={player.id}>
-              <Link to={'/players/' + player.id}>{player.firstname}</Link>
-              <div className ="button">Challange</div>
+              <Link to={'/players/' + player.id}>{player.firstname} {player.lastname}</Link>
+              <div className ="button" onClick ={this.props.challengeClick.bind(null,this.props.playerId,player.id)}>Challange</div>
             </li>
           ); 
         } 
       }else{
         return (
             <li key={player.id}>
-              {player.firstname}
+              {player.firstname} {player.lastname}
               </li>);
       } 
     });
@@ -47,7 +47,7 @@ export class PlayerList extends React.Component {
       <ul className = "player-list">
        {this.list()}
       </ul>
-      {this.props.playerId  > 0? <PlayerCreate/> : }
+      {this.props.playerId  < 0? <PlayerCreate/> : <div/>}
       </div>
     );
   }

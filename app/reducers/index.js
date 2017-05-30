@@ -8,6 +8,7 @@ import errorReducer from './error-reducer';
 import searchReducer from './search-reducer';
 import allianceReducer from './alliance-reducer';
 import factionReducer from './faction-reducer';
+import challengeReducer from './challenge-reducer';
 
 
 
@@ -23,7 +24,8 @@ var reducers = combineReducers({
     errorState: errorReducer,
     searchState: searchReducer,
     factionState: factionReducer,
-    allianceState: allianceReducer
+    allianceState: allianceReducer,
+    challengeState: challengeReducer
 });
 
 export default reducers;

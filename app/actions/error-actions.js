@@ -10,6 +10,14 @@ export function unauthorizedError() {
   };
 }
 
+export function errors(errors) {
+  //errors are generic, and are handeld by the error reducer
+  return {
+    type: types.POST_ERROR,
+    errors
+  };
+}
+
 export function clearErrors() {
   let errors = [];
   return {

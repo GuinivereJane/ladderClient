@@ -9,7 +9,6 @@ if (localStorage.getItem('token') != null){
   console.log('next step');
   playerId = jwtDecode(localStorage.getItem('token')).id  //if there is a loged in player, make sure they are in the stat
 }
-console.log(playerId);
 
 const initialState = {
   players: [],

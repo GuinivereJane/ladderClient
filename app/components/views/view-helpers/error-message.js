@@ -13,7 +13,7 @@ export class Errors{
 		    return <div classNamne='error'>You need to log in to preform that action</div>
 		  }else{
 		    let errorList = this.errors.map((error)=>{
-		      return <div key={error.path} classNamne='error'>{error.type} : {error.path}</div>;
+		      return <div key={error.type} classNamne='error'>{error.type} : {error.path}</div>;
 		    });
 		    return (<div className = 'error-list'>
 		              {errorList}

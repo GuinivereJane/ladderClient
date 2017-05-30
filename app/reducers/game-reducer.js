@@ -11,8 +11,12 @@ const gameReducer = function(state = initialState, action) {
     case types.SAVE_GAME_SUCCESS:
     	let newGames = [...state.games, action.game];
     	return {...state, games:newGames};	
-    }
+    
 
+    case types.GET_GAMES_SUCCESS:
+    		console.log('here');
+    	 return Object.assign({}, state, { games: action.games });
+    }
   return state;
 
 	}

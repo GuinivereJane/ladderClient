@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PlayerProfile from '../views/player-profile';
 import * as playerApi from '../../api/player-api';
 import * as shopApi from '../../api/shop-api';
+import * as gameApi from '../../api/game-api';
 
 import store from '../../store';
 
@@ -33,6 +34,8 @@ export class PlayerProfileContainer extends React.Component {
 
 	componentDidMount(){
 		playerApi.getProfile(this.props.params.playerId);
+		playerApi.getPlayers();
+		gameApi.getGamesByUserId(this.props.params.playerId);
 		shopApi.getShops();
 	}
 // ()=>playerApi.assocStoreToPlayer(2,1)
@@ -41,9 +44,11 @@ export class PlayerProfileContainer extends React.Component {
 		return (
 				<PlayerProfile profile={this.props.playerProfile}
 												 shops={this.props.shops} 
-												 playerId={this.props.playerId}
+												 playerId={this.props.params.playerId}
+												 players={this.props.players}
 												joinStore={this.joinStore}
-												leaveStore={this.leaveStore}/>
+												leaveStore={this.leaveStore}
+												games={this.props.games}/>
 			);
 	}
 }
@@ -52,7 +57,8 @@ const mapStateToProps = function(store) {
 	return {
   	playerProfile: store.playerState.playerProfile,
   	playerId: store.playerState.playerId,
-
+  	players: store.playerState.players,
+  	games: store.gameState.games,
   	shops: store.shopState.shops
 	};
 };

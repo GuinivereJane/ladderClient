@@ -31,10 +31,42 @@ export class PlayerProfile extends React.Component {
 	    					{shop}
 	    				</ul>);
   	}
-  	console.log(profile)
+  	
+  	let gameTable = this.props.games.map((game)=>{
+  		let result = null;
+  		let playerFaction = null;
+  		let opponentFaction = null;
+  		let opponentId = null;
+  		
+  		console.log(game.winnerId + "winner" + game.loserId + "loser" + this.props.playerId +"playerId");
+  		console.log(game.winnerId == this.props.playerId)
+  		game.winnerId == this.props.playerId ? ( result = "won",
+											  											  playerFaction = game.winnerFaction,
+											  											  opponentFaction = game.loserFaction,
+																								  opponentId = game.loserId) : 
+											  											( result = "lost",
+											  											  playerFaction = game.loserFaction,
+											  											  opponentFaction = game.winnerFaction,
+																								  opponentId = game.winnerId);
+
+  		return (	<div className="game-row">
+	  							<div className="game-col date">{game.createdAt}</div>
+	  							<div className="game-col result">{result}</div>
+	  							<div className="game-col points">{game.points}</div>
+	  							<div className="game-col playerFaction">{playerFaction}</div>
+	  							<div className="game-col oponentFaction">{opponentFaction}</div>
+	  							<div className="game-col opponent">{opponentId}</div>
+  							</div>
+  						);
+
+  	});
+  	
 
     return (<div className="player-profile">
 	    				{profile}
+	    			<div>Games History</div>
+	    			{gameTable}
+
 	    				<Link to={'/players'}>Back to list</Link>
     				</div>
     				);

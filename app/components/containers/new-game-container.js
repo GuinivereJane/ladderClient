@@ -12,6 +12,10 @@ import * as factionApi from '../../api/faction-api';
 
 export class NewGameContainer extends React.Component {
 
+constructor(){
+        super()
+        this.handleSubmit=this.handleSubmit.bind(this);
+    }
 
     componentDidMount(){
         playerApi.getPlayers()
@@ -34,9 +38,10 @@ export class NewGameContainer extends React.Component {
     }
 
 	handleSubmit(e){
-		e.preventDefault();
+	e.preventDefault();
+    console.log(e.target.loserFaction);
     let points = e.target.points.value;
-    let winnerId = e.target.winner.value;
+    let winnerId = this.props.playerId
     let winnerFaction = e.target.winnerFaction.value;
     let loserFaction = e.target.loserFaction.value;
     let loserId = e.target.loser.value;
@@ -45,7 +50,8 @@ export class NewGameContainer extends React.Component {
     			winnerId:winnerId,
     			winnerFaction:winnerFaction,
     			loserId:loserId,
-    			loserFaction:loserFaction
+    			loserFaction:loserFaction,
+                source:"new"
     		}
     	
 		let call = gameApi.saveGame(data);
@@ -65,7 +71,7 @@ export class NewGameContainer extends React.Component {
                 return ( <option key={option.id} value={option.name}/>);
             });
         }
-
+        let title =  <div>This form is to be completed by the winner only ! You must be logged in to submit game results</div>;
 		return (
 			<GameForm loserOptions={loserOptions}
                       players={this.props.players}
@@ -73,6 +79,8 @@ export class NewGameContainer extends React.Component {
                       saveGame={this.handleSubmit}
                       change={this.handleLoserChange}
                       factionOptions={factionOptions}
+                      playerId={this.props.playerId}
+                      title={title}
                       />
 		);
 	}
@@ -80,6 +88,7 @@ export class NewGameContainer extends React.Component {
 
 const mapStateToProps = function(store) {
 	return {
+    playerId: store.playerState.playerId,
   	players: store.playerState.players,
     searchResults :store.searchState.searchResults,
   	errors:store.errorState.errors,
